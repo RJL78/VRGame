@@ -3,9 +3,9 @@ class Mover {
   PVector velocity;
   PVector gravityForce;
   PVector friction;
-  PVector bounceVelocity;
-  float gravityConstant = 0.1;
+  float gravityConstant = 0.8;
   float radius;
+  float elasticity = 0.8;
   Plate plate;
 
   Mover(Plate p,float r) {
@@ -14,7 +14,6 @@ class Mover {
     velocity = new PVector(0, 0, 0);
     gravityForce = new PVector(0, 0, 0);
     friction = new PVector(0, 0, 0);
-    bounceVelocity = new PVector(0, 0, 0);
     radius =r;
   }
 
@@ -42,16 +41,25 @@ class Mover {
     
     velocity.add(gravityForce).add(friction);
     location.add(velocity);
+  }
+  
+  void checkedges(){
+    if (location.x>plate.getSize()/2.0) {
+      location.x = plate.getSize()/2.0;
+      velocity.x = -velocity.x*elasticity ;
+    }
+    if (location.x<-plate.getSize()/2.0) {
+      location.x = -plate.getSize()/2.0;
+      velocity.x = -velocity.x*elasticity ;
+    }
+    if (location.z>plate.getSize()/2.0) {
+      location.z = plate.getSize()/2.0;
+      velocity.z = -velocity.z*elasticity ;
+    }
+    if (location.z<-plate.getSize()/2.0) {
+      location.z = -plate.getSize()/2.0;
+      velocity.z = -velocity.z*elasticity ;
+    }
     
-    bounceVelocity.x = 0;
-    bounceVelocity.y = 0;
-    if (abs(location.x)>plate.getSize()/2.0) {
-      bounceVelocity.x = -velocity.x;
-    }
-    if (abs(location.y)>plate.getSize()/2.0) {
-      bounceVelocity.y = -velocity.y;
-    }
-    location.add(bounceVelocity);
-
   }
 }
