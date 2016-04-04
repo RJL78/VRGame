@@ -4,8 +4,6 @@ void moveToCenterOfBoardPlane(){
   rotateZ(currZIncline);
 }
 
-
-
 void moveToCenterOfScreen(){
   translate(screenWidth/2, screenHeight/2, 0);
 }

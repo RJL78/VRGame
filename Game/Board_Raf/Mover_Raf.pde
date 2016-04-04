@@ -18,7 +18,7 @@ class Mover {
     sphereVelocity.add(gravityForce).add(friction);
     spherePositionFromCenter.add(sphereVelocity);
   }
-
+  // ADD CYCLINDER COLLISIONS
   void checkEdges() {
     if (Math.abs(spherePositionFromCenter.x) > boxWidth/2 - sphereSize) {
       sphereVelocity.x = -sphereVelocity.x;

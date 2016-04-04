@@ -1,6 +1,6 @@
 PVector sphereVelocity = new PVector(0, 0, 0);
 PVector spherePositionFromCenter = new PVector(0, 0, 0);
-//float sphereSize =20;
+//float sphereSize=20;
 
 void displayBall(){
   

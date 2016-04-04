@@ -73,48 +73,36 @@ void keyReleased() {
   }
 }
 
-void mouseWheel(MouseEvent event) {
-  if (run) {
-    float e = event.getCount();
-    if (e<0) {
-      speedIncline *= 1.01;
-    } else {
-      speedIncline *= 0.99;
-    }
+
+
+void mouseDragged() {
+  if (pmouseY-mouseY > 0 && currXIncline< maxInclination-inclineDelta) {
+    currXIncline += inclineDelta;
+  } else if (pmouseY-mouseY < 0 && currXIncline> -maxInclination+inclineDelta) {
+    currXIncline -= inclineDelta;
+  }
+  if (pmouseX-mouseX > 0 && currZIncline> -maxInclination+inclineDelta) {
+    currZIncline -=inclineDelta;
+  } 
+  else if (pmouseX-mouseX < 0 &&  currZIncline< maxInclination-inclineDelta) {
+   currZIncline+=inclineDelta;
   }
 }
 
-void mousePressed() {
-  if (run) { 
-    lastPressedX = mouseX;
-    lastPressedY = mouseY;
+
+void mouseWheel(MouseEvent event) {
+  if (run) {
+    println(inclineDelta);
+    if (event.getCount() < 0 && inclineDelta < maxInclineDelta) {
+      inclineDelta += 0.001;
+    } else if (inclineDelta > minInclineDelta) {
+      inclineDelta -= 0.0005;
+    }
   }
 }
 
 void mouseReleased() {
-  if (run) {
-    float deltaX = (mouseX - lastPressedX)/((float)screenWidth);
-    float deltaY = ( - mouseY + lastPressedY)/((float)screenHeight);
-
-    float rotZ =  deltaX * maxInclination * speedIncline;
-    float rotX = deltaY * maxInclination * speedIncline;
-
-    if (rotX + currXIncline > maxInclination ) {
-      rotX = maxInclination - currXIncline;
-    } else if ( rotX + currXIncline < - maxInclination) {
-      rotX = -maxInclination - currXIncline;
-    }
-
-
-    if (rotZ + currZIncline > maxInclination ) {
-      rotZ = maxInclination - currZIncline;
-    } else if ( rotZ + currZIncline < -maxInclination) {
-      rotZ = -maxInclination - currZIncline;
-    }
-
-    currZIncline += rotZ; 
-    currXIncline += rotX;
-  } else {
+  if (!run) {
     PVector cylinderPositionFromCenter = new PVector(mouseX-screenWidth/2, mouseY-screenHeight/2);
     boolean collision = false;
     for (int i=0; i < cylinders.size(); i++ ) {
