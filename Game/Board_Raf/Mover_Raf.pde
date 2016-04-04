@@ -1,35 +1,42 @@
 
-class Mover {
-  PVector location;
-  PVector velocity;
-  PVector gravity;
-  
-  Mover() {
-    location = new PVector(width/2, height/2);
-    velocity = new PVector(1, 1);
-    gravity = new PVector(0,0.5);
-  }
-  
-  void update() {
-    
-    velocity.add(gravity);
-    location.add(velocity);
-  }
- 
-  void display() {
-    stroke(0);
-    strokeWeight(2);
-    fill(127);
+PVector gravityForce = new PVector(0, 0, 0);
+float frictionMagnitude = normalForce * mu;
 
-    ellipse(location.x, location.y, 48, 48);
+class Mover {
+
+  Mover() {
   }
-  
+
+  void update() {
+    gravityForce.x =  sin(currZIncline) * gravityConstant;
+    gravityForce.z = - sin(currXIncline) * gravityConstant;
+
+    PVector friction = sphereVelocity.get();
+    friction.mult(-1);
+    friction.normalize();
+    friction.mult(frictionMagnitude);
+    sphereVelocity.add(gravityForce).add(friction);
+    spherePositionFromCenter.add(sphereVelocity);
+  }
+
   void checkEdges() {
-    if (location.x > width || location.x < 0) {
-      velocity.x = -velocity.x;
+    if (Math.abs(spherePositionFromCenter.x) > boxWidth/2 - sphereSize) {
+      sphereVelocity.x = -sphereVelocity.x;
+      if (spherePositionFromCenter.x > boxWidth/2 - sphereSize){
+         spherePositionFromCenter.x = boxWidth/2 - sphereSize;
+      }
+      else {
+        spherePositionFromCenter.x = -boxWidth/2 + sphereSize;
+      }
     }
-    if (location.y > height || location.y < 0) {
-      velocity.y = -velocity.y;
+    if (Math.abs(spherePositionFromCenter.z) > boxDepth/2 - sphereSize) {
+      sphereVelocity.z = -sphereVelocity.z;
+      if (spherePositionFromCenter.z > boxDepth/2 - sphereSize){
+         spherePositionFromCenter.z = boxDepth/2 - sphereSize;
+      }
+      else {
+        spherePositionFromCenter.z = -boxDepth/2 +sphereSize;
+      }
     }
   }
 }
