@@ -4,6 +4,9 @@ float cylinderBaseSize = 20;
 float cylinderHeight = 50;
 int cylinderResolution = 20;
 PShape openCylinder;
+PShape cylinderTop;
+PShape cylinderBottom;
+PShape cylinder;
 
 
 PShape makeCylinder() {
@@ -16,15 +19,36 @@ PShape makeCylinder() {
     x[i] = sin(angle) * cylinderBaseSize;
     y[i] = cos(angle) * cylinderBaseSize;
   }
+  cylinder = createShape(GROUP);
   openCylinder = createShape();
+  cylinderTop = createShape();
+  cylinderBottom = createShape();
+  
   openCylinder.beginShape(QUAD_STRIP);
-
+  cylinderTop.beginShape(TRIANGLE_FAN);
+  cylinderBottom.beginShape(TRIANGLE_FAN);
+  
+  //draw the border of the cylinder, top and bottom
+  cylinderBottom.vertex(0, 0, 0);
+  cylinderTop.vertex(0, 0, cylinderHeight);
   for (int i = 0; i < x.length; i++) {
     openCylinder.vertex(x[i], y[i], 0);
+    cylinderBottom.vertex(x[i], y[i], 0);
     openCylinder.vertex(x[i], y[i], cylinderHeight);
+    cylinderTop.vertex(x[i], y[i], cylinderHeight);
   }
+  cylinderBottom.vertex(x[0], y[0], 0);
+  cylinderTop.vertex(x[0], y[0], cylinderHeight);
+
+  cylinderTop.endShape();
+  cylinderBottom.endShape();
   openCylinder.endShape();
-  return openCylinder;
+  
+  cylinder.addChild(openCylinder);
+  cylinder.addChild(cylinderTop);
+  cylinder.addChild(cylinderBottom);
+  
+  return cylinder;
 }
 
 void displayCylinders() {
@@ -58,7 +82,7 @@ void displaySelector() {
 
   
   pushMatrix();
-  translate(spherePositionFromCenter.x, spherePositionFromCenter.z, /*spherePositionFromCenter.y+*/(boxHeight/2+sphereSize));
+  translate(spherePositionFromCenter.x, spherePositionFromCenter.y, (boxHeight/2+sphereSize));
   fill(0, 0, 255);
   sphere(sphereSize);
   popMatrix();
