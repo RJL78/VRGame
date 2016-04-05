@@ -1,14 +1,13 @@
-
-
 /** ---- PHYSICAL CONSTANTS ---- **/
 static float normalForce = 1;
 static float mu = 0.01;
 static float gravityConstant = 0.3;
+static float elasticity = 0.8;
 
 /** ---- DIMENSION CONSTANTS ---- **/
 static int screenWidth = 1000;
 static int screenHeight = 1000;
-static int sphereSize = 20;
+static int sphereSize = 10;
 
 static int cameraDist = 600;
 
@@ -30,7 +29,7 @@ void settings() {
 
 void setup() {
 
-  camera(screenWidth/2, screenHeight/2, cameraDist, screenWidth/2, screenHeight/2, 0, 0, 1, 0);
+  camera(screenWidth/2, 0.75*screenHeight/2, cameraDist, screenWidth/2, screenHeight/2, 0, 0, 1, 0);
   perspective();
   directionalLight(50, 100, 125, 0, -1, 0);
   ambientLight(102, 102, 102);
@@ -46,7 +45,7 @@ void draw() {
   line(screenWidth/2, 0, 0, screenWidth/2, screenHeight, 0);
   if (run) {
     mover.update(); 
-    mover.checkEdges();
+    mover.checkCollisions();
     displayBoard();
     displayBall();
     displayCylinders();
@@ -92,7 +91,6 @@ void mouseDragged() {
 
 void mouseWheel(MouseEvent event) {
   if (run) {
-    println(inclineDelta);
     if (event.getCount() < 0 && inclineDelta < maxInclineDelta) {
       inclineDelta += 0.001;
     } else if (inclineDelta > minInclineDelta) {
@@ -106,16 +104,14 @@ void mouseReleased() {
     PVector cylinderPositionFromCenter = new PVector(mouseX-screenWidth/2, mouseY-screenHeight/2);
     boolean collision = false;
     for (int i=0; i < cylinders.size(); i++ ) {
-      if ( (cylinderPositionFromCenter.x - cylinderPositions.get(i).x)*(cylinderPositionFromCenter.x - cylinderPositions.get(i).x)
-        + (cylinderPositionFromCenter.y - cylinderPositions.get(i).y) *(cylinderPositionFromCenter.y - cylinderPositions.get(i).y)
-        <= 2*cylinderBaseSize*2*cylinderBaseSize ) {
+      if (cylinderPositionFromCenter.dist(cylinderPositions.get(i))
+        <= 2*cylinderBaseSize ) {
         collision = true;
       }
     }
 
-    if ( (cylinderPositionFromCenter.x - spherePositionFromCenter.x)*(cylinderPositionFromCenter.x - spherePositionFromCenter.x)+
-      (cylinderPositionFromCenter.y - spherePositionFromCenter.z)*(cylinderPositionFromCenter.y - spherePositionFromCenter.z) 
-      <= (cylinderBaseSize+sphereSize)*(cylinderBaseSize+sphereSize) ) {
+    if ( cylinderPositionFromCenter.dist(spherePositionFromCenter) 
+      <= (cylinderBaseSize+sphereSize)) {
       collision = true;
     }
     if ( ! collision && cylinderPositionFromCenter.x <  boxWidth/2-cylinderBaseSize  && cylinderPositionFromCenter.x >- boxWidth/2 +cylinderBaseSize &&
