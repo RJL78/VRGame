@@ -33,16 +33,16 @@ void setup() {
   perspective();
   directionalLight(50, 100, 125, 0, -1, 0);
   ambientLight(102, 102, 102);
-  background(255, 255, 255);
-  stroke(0, 0, 255);
-  line(screenWidth/2, 0, 0, screenWidth/2, screenHeight, 0);
+  
+  //stroke(0, 0, 255);
+  //line(screenWidth/2, 0, 0, screenWidth/2, screenHeight, 0);
 }
 
 void draw() {
   perspective();
-  background(255, 255, 255);
+  background(backgroundColor);
   stroke(0, 0, 255);
-  line(screenWidth/2, 0, 0, screenWidth/2, screenHeight, 0);
+  //line(screenWidth/2, 0, 0, screenWidth/2, screenHeight, 0);
   if (run) {
     mover.update(); 
     mover.checkCollisions();
@@ -63,6 +63,12 @@ void keyPressed() {
   if (key == CODED && keyCode == SHIFT) {
     run = false;
   }
+  switch(key){
+  case 'r' : itsRainingMen = (itsRainingMen)? false : true; break;
+  case 'c' : if(run) clearCylinders(); break;
+              
+  
+  }
 }
 
 void keyReleased() {
@@ -75,6 +81,11 @@ void keyReleased() {
 
 
 void mouseDragged() {
+  float dy = pmouseY-mouseY, dx = pmouseX-mouseX;
+  //currXIncline = (dy > 0)? clamp(currXIncline + inclineDelta, -maxInclination+inclineDelta, maxInclination-inclineDelta) : clamp(currXIncline - inclineDelta, -maxInclination+inclineDelta, maxInclination-inclineDelta) ;
+  //currZIncline = (dx > 0)? clamp(currZIncline - inclineDelta, -maxInclination+inclineDelta, maxInclination-inclineDelta) : clamp(currZIncline + inclineDelta, -maxInclination+inclineDelta, maxInclination-inclineDelta) ;
+  
+  
   if (pmouseY-mouseY > 0 && currXIncline< maxInclination-inclineDelta) {
     currXIncline += inclineDelta;
   } else if (pmouseY-mouseY < 0 && currXIncline> -maxInclination+inclineDelta) {
@@ -86,6 +97,7 @@ void mouseDragged() {
   else if (pmouseX-mouseX < 0 &&  currZIncline< maxInclination-inclineDelta) {
    currZIncline+=inclineDelta;
   }
+
 }
 
 

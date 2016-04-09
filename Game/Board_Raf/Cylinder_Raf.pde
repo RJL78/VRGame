@@ -7,6 +7,10 @@ PShape openCylinder;
 PShape cylinderTop;
 PShape cylinderBottom;
 PShape cylinder;
+int cylinderColor = new Color(wallsColor).getRGB();
+int ballShiftColor = new Color(ballColor).darker().getRGB();
+int strokeShiftColor = new Color(strokeColor).darker().getRGB();
+int backgroundShiftColor = new Color(backgroundColor).darker().getRGB();
 
 
 PShape makeCylinder() {
@@ -52,12 +56,16 @@ PShape makeCylinder() {
 }
 
 void displayCylinders() {
+  
+  
   pushMatrix(); 
   moveToCenterOfBoardPlane();
   for (int i=0; i<cylinders.size(); i++) {
     pushMatrix(); 
-    translate(cylinderPositions.get(i).x, boxHeight/2, cylinderPositions.get(i).y); 
+    translate(cylinderPositions.get(i).x, boxHeight/2 - 1, cylinderPositions.get(i).y); 
     rotateX(PI/2);
+    fill(cylinderColor);
+    noStroke();
     shape(cylinders.get(i)); 
     popMatrix();
   }
@@ -66,10 +74,13 @@ void displayCylinders() {
 
 
 void displaySelector() {
-  
+  ambientLight(255,200,150);
+  noStroke();
+  background(backgroundShiftColor);
   ortho();
   
   pushMatrix();
+  fill(cylinderColor);
   PShape cursorCylinder = makeCylinder();
   translate(mouseX,mouseY,boxHeight/2);
   shape(cursorCylinder);
@@ -77,23 +88,62 @@ void displaySelector() {
   
   pushMatrix();
   moveToCenterOfScreen();
-  fill(255, 0, 0);
+  fill(boxColor);
   box(boxWidth, boxDepth, boxHeight);
-
+  
+  drawShiftWalls();
   
   pushMatrix();
   translate(spherePositionFromCenter.x, spherePositionFromCenter.y, (boxHeight/2+sphereSize));
-  fill(0, 0, 255);
+  fill(ballShiftColor);
   sphere(sphereSize);
   popMatrix();
   
-
+fill(cylinderColor);
   for (int i=0; i<cylinders.size(); i++) {
     pushMatrix(); 
+    
     translate(cylinderPositions.get(i).x, cylinderPositions.get(i).y, boxHeight/2); 
     shape(cylinders.get(i)); 
     popMatrix();
   }
 
   popMatrix();
+}
+void clearCylinders(){
+  cylinders = new ArrayList<PShape>();
+  cylinderPositions = new ArrayList<PVector>();
+}
+
+void drawShiftWalls(){
+
+  pushMatrix();
+  fill(cylinderColor);
+  stroke(strokeColor);
+  strokeWeight(8);
+  
+  translate(boxWidth/2 + 10, 0, 5);
+  box(20, boxDepth, 10);
+  translate(0, boxDepth/2 + 10,0);
+  box(20, 20, 10);
+  
+  translate(-boxWidth/2 - 10, 0, 0);
+  box(boxWidth, 20, 10);
+  translate(-boxWidth/2 - 10, 0, 0);
+  box(20, 20, 10);
+  
+  translate(0, -boxDepth/2 - 10, 0);
+  box(20, boxDepth, 10);
+  translate(0, -boxDepth/2 - 10, 0);
+  box(20, 20, 10);
+  
+  translate(boxWidth/2 + 10, 0, 0);
+  box(boxWidth, 20, 10);
+  translate(boxWidth/2 + 10, 0, 0);
+  box(20, 20, 10);
+  noStroke();
+  strokeWeight(1);
+  popMatrix();
+
+  
 }
