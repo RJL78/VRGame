@@ -9,7 +9,7 @@ float angleY = 0;
 
 void draw() {
   
-  background(255, 200, 200);
+  background(255, 255, 255);
   My3DPoint eye = new My3DPoint(0, 0, -5000);
   My3DPoint origin = new My3DPoint(0, 0, 0);
   My3DBox input3DBox = new My3DBox(origin, value, value, value);

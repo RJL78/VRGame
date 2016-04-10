@@ -1,3 +1,6 @@
+// This file stores helper methods which serve to move our paintbrush into the desired position
+// Their names should be self-explanatory
+
 void moveToCenterOfBoardPlane(){
   translate(screenWidth/2, screenHeight/2, 0);
   rotateX(currXIncline);

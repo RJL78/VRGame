@@ -1,12 +1,13 @@
 PVector sphereVelocity = new PVector(0, 0);
 PVector spherePositionFromCenter = new PVector(0, 0);
-//float sphereSize=20;
-int ballColor = new Color(strokeColor).getRGB();
+float sphereSize = 10;
+
+// displayBall paints the ball at the correct position in the plane of the field ( as defined by spherePositionFromCenter )
 
 void displayBall(){
   
   pushMatrix();
-  
+ 
   fill(ballColor);
   stroke(ballColor);
   moveToCenterOfBoardPlane();

@@ -1,135 +1,131 @@
-float rotationX = 0f, rotationY = 0f, rotationZ = 0f;
-float saveRX = 0, saveRY = 0, saveRZ = 0;
-float rtS = 0.01, multipRTS = 1, addedMRTS = 0.2, maxMRTS = 5, minMRTS = 0.2; //rotation Speed
-//W for Width, T for Thickness, D for Depth
-float boxW, boxT, boxD, sphereR;
-float addedAngle = PI/32;
-float zoom = 0, zoomAdd = 50, zoomMax = 300;
-boolean camera = true;
 
-Mover mover;
-Utils toolbox;
-Drawer draw;
 
+/** ---- PHYSICAL CONSTANTS ---- **/
+static float normalForce = 1;
+static float mu = 0.01;
+static float gravityConstant = 0.3;
+static float elasticity = 0.8;
+
+/** ---- DIMENSION CONSTANTS ---- **/
+static int screenWidth = 1000;
+static int screenHeight = 1000;
+static int cameraDist = 600;
+
+/** ---- OBJECT DECLARATIONS ---- **/
+Mover mover = new Mover();
+
+/** ---- GlOBAL VARIABLES ---- **/
+Boolean run = true;
+
+
+
+
+/** ---- MAIN METHODS ---- **/
 
 void settings() {
-size(1000, 1000, P3D);
+  size(screenWidth, screenHeight, P3D);
 }
+
+
 void setup() {
-noStroke();
-mover = new Mover();
-toolbox = new Utils();
-draw = new Drawer();
-boxW = 600;
-boxD = 600; 
-boxT = 10;
-sphereR = 25;
-//camera(width/2.0, - height/8.0, (height/4.0) / tan(PI*30.0 / 180.0), width/2.0, height/2.0, 0, 0, 1, 0);
-}
-
-void draw(){
- 
-  //y = height/2.0  -300
-  //x = width/2.0 -500
- 
-pushMatrix();
-translate(width/2, height/2, 0);
-
-if(camera){
-camera(0, -600 - zoom, 600 + zoom, 0, 0, 0, 0, -0.2, 1);
-
-
-}
-else{
-camera(0, -900 - zoom, 1, 0, 0, 0, 0, 1, 0);
-
-}
-
-background(0);
-stroke(5);
-fill(255, 255, 0);
-rotateX(rotationX);
-rotateY(rotationY);
-rotateZ(rotationZ);
-box(boxW, boxT, boxD);
-
-draw.walls();
-
-pushMatrix();
-translate(0,-5, 0);
-fill(0);
-noStroke();
-box(5, 0.5 , 30);
-box(30, 0.5 , 5);
-popMatrix();
-
-
-mover.update();
-mover.checkEdges();
-        pushMatrix();
-        translate(0, -30, 0);
-            pushMatrix();
-            
-            translate(mover.location.x, mover.location.y, mover.location.z);
-            stroke(255);
-            sphere(sphereR);
-            popMatrix();        
-        popMatrix();
-popMatrix();
-
-}
-
-void mouseWheel(MouseEvent event){
-float e = event.getCount();
-multipRTS = toolbox.clamp(multipRTS + ((e > 0) ? -1 : 1) * addedMRTS, minMRTS, maxMRTS);
-}
-
-
-void mouseDragged(){
-  float xDiff = mouseX - pmouseX;
-  float yDiff = mouseY - pmouseY;
-  map(xDiff,-1000, 1000, -PI/16, PI/16);
-  map(yDiff,-1000, 1000, -PI/16, PI/16);
+  perspective();
+  camera(screenWidth/2, 0.75*screenHeight/2, cameraDist, screenWidth/2, screenHeight/2, 0, 0, 1, 0);
+  directionalLight(50, 100, 125, 0, -1, 0);
+  ambientLight(102, 102, 102);
   
-  if(camera) rotationY = toolbox.clampAngle(rotationY + ((rtS * multipRTS) *xDiff));
-
-  if(camera) rotationX = toolbox.clampAngle(rotationX + (-(rtS * multipRTS) *yDiff));
 }
 
-void switchCameras(){
-if(camera){
-saveRX = rotationX;
-saveRY = rotationY;
-saveRZ = rotationZ;
-rotationX = 0;
-rotationY = 0;
-rotationZ = 0;
-camera = false;
+void draw() {
+  background(backgroundColor);
+  stroke(0, 0, 255);
+  if (run) {  
+    mover.update(); 
+    mover.checkCollisions();
+    displayBoard();
+    displayBall();
+    displayCylinders();
+  } else {
+    displaySelector();
+  }
+}
+
+/** --- IO CONTROLS ---- **/
+
+
+//The following two methods, keyPressed() and keyReleased() allow the user to move in and out of SHIFT mode
+
+void keyPressed() {
+
+  if (key == CODED && keyCode == SHIFT) {
+    run = false;
+  }
+  switch(key){
+  case 'r' : itsRainingMen = (itsRainingMen)? false : true; break;
+  case 'c' : if(run) clearCylinders(); break;
+              
+  
+  }
+}
+
+void keyReleased() {
+  if (!run && key == CODED && keyCode == SHIFT) {
+    run = true;
+    setup();
+  }
+}
+
+
+// We use mouseDragged() to let the user adjust the inclination of the board 
+
+void mouseDragged() {
+  if (pmouseY-mouseY > 0 && currXIncline< maxInclination-inclineDelta) {
+    currXIncline += inclineDelta;
+  } else if (pmouseY-mouseY < 0 && currXIncline> -maxInclination+inclineDelta) {
+    currXIncline -= inclineDelta;
+  }
+  if (pmouseX-mouseX > 0 && currZIncline> -maxInclination+inclineDelta) {
+    currZIncline -=inclineDelta;
+  } 
+  else if (pmouseX-mouseX < 0 &&  currZIncline< maxInclination-inclineDelta) {
+   currZIncline+=inclineDelta;
+  }
 
 }
 
-else{
-rotationX = saveRX;
-rotationY = saveRY;
-rotationZ = saveRZ;
-camera = true;
-}
-}
+// We use mouseWheel() to allow the user to adjust the sensitivity of the mouse when adjusting the inclination of the board
 
-void keyPressed(){
-     
-    switch(key){
-    case 'a' : if(camera) rotationZ = toolbox.clampAngle(rotationZ - addedAngle); break;
-    case 'd' : if(camera) rotationZ = toolbox.clampAngle(rotationZ + addedAngle); break;
-    case 'w' : if(camera) rotationX = toolbox.clampAngle(rotationX + addedAngle); break;
-    case 's' : if(camera) rotationX = toolbox.clampAngle(rotationX - addedAngle); break;
-    case 'q' : if(camera) rotationY = toolbox.clampAngle(rotationY - addedAngle); break;
-    case 'e' : if(camera) rotationY = toolbox.clampAngle(rotationY + addedAngle); break;
-    case 'y' : zoom = toolbox.clamp(zoom + zoomAdd, - zoomMax, zoomMax); break;
-    case 'x' : zoom = toolbox.clamp(zoom - zoomAdd, - zoomMax, zoomMax); break;
-    case 'c' : switchCameras();
-    default: ;
+void mouseWheel(MouseEvent event) {
+  if (run) {
+    if (event.getCount() < 0 && inclineDelta < maxInclineDelta) {
+      inclineDelta += 0.001;
+    } else if (inclineDelta > minInclineDelta) {
+      inclineDelta -= 0.0005;
     }
-    
-  
+  }
+}
+
+// MouseReleased() allows us (if and only if in SHIFT mode) to add a new cylinder to the board. 
+// This function also checks to make sure that the cylinder is added to a legal spot
+
+void mouseReleased() {
+  if (!run) {
+    PVector cylinderPositionFromCenter = new PVector(mouseX-screenWidth/2, mouseY-screenHeight/2);
+    boolean collision = false;
+    for (int i=0; i < cylinders.size(); i++ ) {
+      if (cylinderPositionFromCenter.dist(cylinderPositions.get(i))
+        <= 2*cylinderBaseSize ) {
+        collision = true;
+      }
+    }
+
+    if ( cylinderPositionFromCenter.dist(spherePositionFromCenter) 
+      <= (cylinderBaseSize+sphereSize)) {
+      collision = true;
+    }
+    if ( ! collision && cylinderPositionFromCenter.x <  boxWidth/2-cylinderBaseSize  && cylinderPositionFromCenter.x >- boxWidth/2 +cylinderBaseSize &&
+      cylinderPositionFromCenter.y <  boxDepth/2 - cylinderBaseSize && cylinderPositionFromCenter.y >- boxDepth/2 +cylinderBaseSize) {
+      cylinders.add(makeCylinder());
+      cylinderPositions.add(cylinderPositionFromCenter);
+    }
+  }
 }

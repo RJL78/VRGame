@@ -1,78 +1,65 @@
-class Mover{
-PVector location;
-PVector velocity;
-PVector gravity;
-PVector ff; //friction force
-float rawSpeed;
 
-final float gravityConstant = .05 * 3;
-final float nl = .8; //nL stands for normal loss
-final float fmu = 0.01;
+PVector gravityForce = new PVector(0, 0);
+float waterSoapiness = 0.75;
+float frictionMagnitude = (itsRainingMen) ? waterSoapiness*normalForce * mu : normalForce * mu;
 
 
-Mover() {
-location = new PVector(0, 0, 0);
-velocity = new PVector(0, 0, 0);
-gravity = new PVector(0, 5, 0);
-}
+class Mover {
 
-void update() {
-location.add(velocity);
-rawSpeed = velocity.mag();
-velocity.add(totalF());
+  Mover() {
+  }
+  
+  
+  // update() modifies the physical forces at work according to the inclination of the board and the speed of the ball
+  void update() {
+    gravityForce.x =  sin(currZIncline) * gravityConstant;
+    gravityForce.y = - sin(currXIncline) * gravityConstant;
+    PVector friction = sphereVelocity.get();
+    friction.mult(-1);
+    friction.normalize();
+    friction.mult(frictionMagnitude);
+    sphereVelocity.add(gravityForce).add(friction);
+    spherePositionFromCenter.add(sphereVelocity);
+  }
+  
+  // checkCollisions() checks to see if any velocities or positions need to be modified because of a collision
+  void checkCollisions() {
+    checkEdges();
+    checkCylinderCollisions();
+  }
+  
+  // checkEdges() checks to see if any velocities or positions need to be modified because of a collision between the ball and the box edges
+  void checkEdges() {
+    if (Math.abs(spherePositionFromCenter.x) > boxWidth/2 - sphereSize) {
+      sphereVelocity.x = -sphereVelocity.x*elasticity;
+      if (spherePositionFromCenter.x > boxWidth/2 - sphereSize) {
+        spherePositionFromCenter.x = boxWidth/2 - sphereSize;
+      } else {
+        spherePositionFromCenter.x = -boxWidth/2 + sphereSize;
+      }
+    }
+    if (Math.abs(spherePositionFromCenter.y) > boxDepth/2 - sphereSize) {
+      sphereVelocity.y = -sphereVelocity.y*elasticity;
+      if (spherePositionFromCenter.y > boxDepth/2 - sphereSize) {
+        spherePositionFromCenter.y = boxDepth/2 - sphereSize;
+      } else {
+        spherePositionFromCenter.y = -boxDepth/2 +sphereSize;
+      }
+    }
+  }
 
 
-}
+  // checkCylinderCollisions() checks to see if any velocities or positions need to be modified because of a collision between the ball and a cylinder 
+  void checkCylinderCollisions() {
 
-float limitX(){
-return (boxW/2 - sphereR) /* *cos(rotationZ)*/;
-}
-
-float limitZ(){
-return (boxD/2 - sphereR);
-}
-
-//TODO: correct these
-PVector gravity(){
-return new PVector(sin(rotationZ) * gravityConstant,
-            gravityConstant,
-            sin(-rotationX) * gravityConstant);
-}
-
-PVector friction(){
-PVector result = velocity.copy();
-result.normalize().mult(-fmu * rawSpeed);
-return result;
-}
-
-PVector totalF(){
-return gravity().add(friction());
-}
-
-
-void checkEdges() {
-if (location.x > limitX()) {
-  location.x = limitX();
-  velocity.x *= - nl;
-}
-else if (location.x < - limitX()) {
-  location.x = - limitX();
-  velocity.x *= - nl;
-}
-
-if (location.z > limitZ()) {
-  location.z = limitZ();
-  velocity.z *= - nl;
-}
-else if (location.z < - limitZ()) {
-  location.z = - limitZ();
-  velocity.z *= - nl;
-}
-
-if (location.y > 0) {
-  location.y = 0;
-//velocity.y /= -5;
-}
-}
-
+    for (int i=0; i<cylinders.size(); i++) {
+      float distance = cylinderPositions.get(i).dist(spherePositionFromCenter);
+      if (distance <= sphereSize + cylinderBaseSize) {
+        PVector normalVector = PVector.sub(spherePositionFromCenter, cylinderPositions.get(i)).normalize();
+        spherePositionFromCenter = PVector.add(cylinderPositions.get(i), PVector.mult(normalVector, cylinderBaseSize+sphereSize));
+        sphereVelocity = PVector.sub(sphereVelocity, PVector.mult(normalVector, 2*normalVector.dot(sphereVelocity)));
+        sphereVelocity.mult(elasticity);
+      }
+    }
+  }
 }

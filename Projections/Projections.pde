@@ -14,7 +14,7 @@ void draw() {
   My3DBox input3DBox = new My3DBox(origin, 100, 150, 300);
 
   //rotated around x
-  float[][] transform1 = rotateYMatrix(angleX);
+  float[][] transform1 = rotateXMatrix(angleX);
   input3DBox = transformBox(input3DBox, transform1);
   projectBox(eye, input3DBox).render();
 
