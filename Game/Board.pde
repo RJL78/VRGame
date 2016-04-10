@@ -1,5 +1,4 @@
 import java.lang.Math;
-import java.util.Random;
 import java.awt.Color;
 
 
@@ -8,13 +7,14 @@ int boxWidth = screenWidth/2;
 int boxHeight = 10;
 int boxDepth = boxWidth;
 
+//The colors are represented with the class jawa.awt.Color for easier manipulation
 int boxColor = new Color(155, 255, 150).getRGB();
 int strokeColor = new Color(205, 50, 10).getRGB();
 int wallsColor = new Color(255, 153, 0).getRGB();
 int backgroundColor = new Color(0, 155, 255).getRGB();
-
 int ballColor = new Color(strokeColor).getRGB();
 
+//These variables are used for the implementation of the board's rotation
 float currXIncline = 0;
 float currZIncline = 0;
 float XinclineFactor = screenHeight/2; 
@@ -23,14 +23,11 @@ float inclineDelta = 0.015;
 float maxInclineDelta = 0.03;
 float minInclineDelta = 0.001;
 float maxInclination = PI/3;
-float rainFrequency = boxWidth * boxDepth / 10000;
-boolean itsRainingMen = false;
-
-
 
 
 /** ---- METHODS ---- **/
 
+//This method draws the board with its accessories
 void displayBoard() { 
 
   pushMatrix();
@@ -42,11 +39,13 @@ void displayBoard() {
   popMatrix();
 } 
 
+//this method is called in displayBoard() and draws the graphical accessories that do not interfere with the gameplay
+//such accessories are the walls, and later the addition of rain, clouds, etc..
 void drawAdditions() {
   drawWalls();
-  if (itsRainingMen) drawRain();
 }
 
+//this method is called in drawAdditions() and draws walls around the board
 void drawWalls() {
   pushMatrix();
   fill(wallsColor);
@@ -74,21 +73,7 @@ void drawWalls() {
   popMatrix();
 }
 
-void drawRain() {  
-  pushMatrix();
-  stroke(0, 0, 150);
-  translate(-boxWidth/2, 0, -boxDepth/2);
-  Random r = new Random();
-  for (int i = 0; i < rainFrequency; i++) {
-    float w = (boxWidth*.9) * r.nextFloat();
-    float d = (boxDepth*.9) * r.nextFloat();
-
-    line(w, -100, d, w*1.1, 0, d*1.1);
-  }
-
-  popMatrix();
-}
-
+//this method draws the walls that only appear in the SHIFT mode, explained in another tab
 void drawShiftWalls() {
 
   pushMatrix();

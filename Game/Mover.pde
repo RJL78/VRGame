@@ -1,7 +1,6 @@
 
 PVector gravityForce = new PVector(0, 0);
-float waterSoapiness = 0.75;
-float frictionMagnitude = (itsRainingMen) ? waterSoapiness*normalForce * mu : normalForce * mu;
+float frictionMagnitude = normalForce * mu;
 
 
 class Mover {
