@@ -26,10 +26,10 @@ void drawScoreBoard(){
   topView.rect(0,0,topViewSize,topViewSize);
   topView.endDraw();
   
-  
- // ortho();
+
+   ortho();
   image(scoreBoardBackGround,0, screenHeight-screenHeight/6);
-   //image(topView,scoreBorderSize, screenHeight-screenHeight/6+scoreBorderSize);
+  image(topView,scoreBorderSize, screenHeight-screenHeight/6+scoreBorderSize);
   perspective();
 
 }
