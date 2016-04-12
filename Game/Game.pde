@@ -9,7 +9,7 @@ static float elasticity = 0.8;
 /** ---- DIMENSION CONSTANTS ---- **/
 static int screenWidth = 1000;
 static int screenHeight = 1000;
-static int cameraDist = 600;
+static int cameraDist = 1000;
 
 /** ---- OBJECT DECLARATIONS ---- **/
 Mover mover = new Mover();
@@ -32,11 +32,13 @@ void setup() {
   camera(screenWidth/2, 0.75*screenHeight/2, cameraDist, screenWidth/2, screenHeight/2, 0, 0, 1, 0);
   directionalLight(50, 100, 125, 0, -1, 0);
   ambientLight(102, 102, 102);
+  setupScoreBoard();
   
 }
 
 void draw() {
   background(backgroundColor);
+  drawScoreBoard();
   stroke(0, 0, 255);
   if (run) {  
     mover.update(); 
