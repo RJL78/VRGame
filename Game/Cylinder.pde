@@ -94,7 +94,9 @@ void displaySelector() {
   fill(cylinderColor);
   PShape cursorCylinder = makeCylinder();
   translate(mouseX, mouseY, boxHeight/2);
-  shape(cursorCylinder);
+  if(!mouseOverScoreBoard()){
+    shape(cursorCylinder);
+  }
   popMatrix();
 
   pushMatrix();

@@ -16,6 +16,10 @@ Mover mover = new Mover();
 
 /** ---- GlOBAL VARIABLES ---- **/
 Boolean run = true;
+boolean zoomPlusClicked = false;
+boolean zoomMinusClicked = false;
+
+float minVelocityForScore = 2;
 
 
 
@@ -28,7 +32,7 @@ void settings() {
 
 
 void setup() {
-  perspective();
+
 //  camera(screenWidth/2, 0.75*screenHeight/2, cameraDist, screenWidth/2, screenHeight/2, 0, 0, 1, 0);
   directionalLight(50, 100, 125, 0, -1, 0);
   ambientLight(102, 102, 102);
@@ -37,8 +41,8 @@ void setup() {
 }
 
 void draw() {
+  perspective();
   background(backgroundColor);
-  drawScoreBoard();
   stroke(0, 0, 255);
   if (run) {  
     mover.update(); 
@@ -49,12 +53,18 @@ void draw() {
   } else {
     displaySelector();
   }
+  drawScoreBoard();
 }
 
 /** --- IO CONTROLS ---- **/
 
 
 //The following two methods, keyPressed() and keyReleased() allow the user to move in and out of SHIFT mode
+
+void mousePressed(){
+  zoomPlusClicked = mouseOverPlusZoom();
+  zoomMinusClicked = mouseOverMinusZoom();
+}
 
 void keyPressed() {
 
@@ -67,7 +77,6 @@ void keyPressed() {
 void keyReleased() {
   if (!run && key == CODED && keyCode == SHIFT) {
     run = true;
-    setup();
   }
 }
 
@@ -75,16 +84,18 @@ void keyReleased() {
 // We use mouseDragged() to let the user adjust the inclination of the board 
 
 void mouseDragged() {
-  if (pmouseY-mouseY > 0 && currXIncline< maxInclination-inclineDelta) {
-    currXIncline += inclineDelta;
-  } else if (pmouseY-mouseY < 0 && currXIncline> -maxInclination+inclineDelta) {
-    currXIncline -= inclineDelta;
-  }
-  if (pmouseX-mouseX > 0 && currZIncline> -maxInclination+inclineDelta) {
-    currZIncline -=inclineDelta;
-  } 
-  else if (pmouseX-mouseX < 0 &&  currZIncline< maxInclination-inclineDelta) {
-   currZIncline+=inclineDelta;
+  if(!mouseOverScoreBoard()){
+    if (pmouseY-mouseY > 0 && currXIncline< maxInclination-inclineDelta) {
+      currXIncline += inclineDelta;
+    } else if (pmouseY-mouseY < 0 && currXIncline> -maxInclination+inclineDelta) {
+      currXIncline -= inclineDelta;
+    }
+    if (pmouseX-mouseX > 0 && currZIncline> -maxInclination+inclineDelta) {
+      currZIncline -=inclineDelta;
+    } 
+      else if (pmouseX-mouseX < 0 &&  currZIncline< maxInclination-inclineDelta) {
+      currZIncline+=inclineDelta;
+     }
   }
 
 }
@@ -105,6 +116,14 @@ void mouseWheel(MouseEvent event) {
 // This function also checks to make sure that the cylinder is added to a legal spot
 
 void mouseReleased() {
+  if( zoomPlusClicked && mouseOverPlusZoom()){
+    scoreBarWidth += 2;
+  }
+  if( zoomMinusClicked && mouseOverMinusZoom() && scoreBarWidth-2>=minScoreBarWidth){
+    scoreBarWidth -= 2;
+  } 
+  zoomPlusClicked = false;
+  zoomMinusClicked= false;
   if (!run) {
     PVector cylinderPositionFromCenter = new PVector(mouseX-screenWidth/2, mouseY-screenHeight/2);
     boolean collision = false;
