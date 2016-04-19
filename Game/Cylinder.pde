@@ -113,7 +113,6 @@ void displaySelector() {
   fill(cylinderColor);
   for (int i=0; i<cylinders.size(); i++) {
     pushMatrix(); 
-
     translate(cylinderPositions.get(i).x, cylinderPositions.get(i).y, boxHeight/2); 
     shape(cylinders.get(i)); 
     popMatrix();

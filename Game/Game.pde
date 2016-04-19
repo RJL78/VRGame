@@ -29,7 +29,7 @@ void settings() {
 
 void setup() {
   perspective();
-  camera(screenWidth/2, 0.75*screenHeight/2, cameraDist, screenWidth/2, screenHeight/2, 0, 0, 1, 0);
+//  camera(screenWidth/2, 0.75*screenHeight/2, cameraDist, screenWidth/2, screenHeight/2, 0, 0, 1, 0);
   directionalLight(50, 100, 125, 0, -1, 0);
   ambientLight(102, 102, 102);
   setupScoreBoard();

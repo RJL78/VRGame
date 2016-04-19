@@ -22,8 +22,25 @@ void drawScoreBoard(){
   scoreBoardBackGround.endDraw();
   
   topView.beginDraw();
+  topView.noStroke();
   topView.fill(boxColor);
   topView.rect(0,0,topViewSize,topViewSize);
+  topView.fill(ballShiftColor);
+  topView.ellipse(topViewSize/2+spherePositionFromCenter.x/boxDepth*topViewSize,
+                  topViewSize/2+spherePositionFromCenter.y/boxWidth*topViewSize,
+                  sphereSize , 
+                  sphereSize );
+
+ 
+  for (int i =0; i <cylinders.size(); i++){
+    topView.fill(0);
+    topView.ellipse( topViewSize/2+cylinderPositions.get(i).x/boxDepth*topViewSize,
+                     topViewSize/2+cylinderPositions.get(i).y/boxHeight*topViewSize,
+                     15,15); // needs to be modified
+    println(topViewSize/2+cylinderPositions.get(i).x/boxDepth*topViewSize);
+    println(cylinders.size());
+      
+  }
   topView.endDraw();
   
 
