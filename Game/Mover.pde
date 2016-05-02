@@ -29,6 +29,7 @@ class Mover {
   
   // checkEdges() checks to see if any velocities or positions need to be modified because of a collision between the ball and the box edges
   void checkEdges() {
+    boolean collision = false;
     if (Math.abs(spherePositionFromCenter.x) > boxWidth/2 - sphereSize) {
       sphereVelocity.x = -sphereVelocity.x*elasticity;
       if (spherePositionFromCenter.x > boxWidth/2 - sphereSize) {
@@ -36,6 +37,7 @@ class Mover {
       } else {
         spherePositionFromCenter.x = -boxWidth/2 + sphereSize;
       }
+      collision = true;
     }
     if (Math.abs(spherePositionFromCenter.y) > boxDepth/2 - sphereSize) {
       sphereVelocity.y = -sphereVelocity.y*elasticity;
@@ -44,7 +46,15 @@ class Mover {
       } else {
         spherePositionFromCenter.y = -boxDepth/2 +sphereSize;
       }
+      collision = true;
+
     }
+    if (collision && sphereVelocity.mag()> minVelocityForScore){
+      lastScore = -sphereVelocity.mag();
+      totalScore += lastScore;
+      updateMaxMinScore();
+    }
+    
   }
 
 
@@ -58,6 +68,11 @@ class Mover {
         spherePositionFromCenter = PVector.add(cylinderPositions.get(i), PVector.mult(normalVector, cylinderBaseSize+sphereSize));
         sphereVelocity = PVector.sub(sphereVelocity, PVector.mult(normalVector, 2*normalVector.dot(sphereVelocity)));
         sphereVelocity.mult(elasticity);
+        if (sphereVelocity.mag()>minVelocityForScore){
+          lastScore = sphereVelocity.mag();
+          totalScore += lastScore;
+          updateMaxMinScore();
+        }
       }
     }
   }
