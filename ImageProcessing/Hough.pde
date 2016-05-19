@@ -39,8 +39,8 @@ void hough(PImage edgeImg, int nLines) {
   float discretizationStepsR = 2.5f;
   ArrayList<Integer> bestCandidates = new ArrayList();
   ArrayList<PVector> bestLines = new ArrayList();
-  int minVotes = 150;
-  int neighbourhood = 100;
+  int minVotes = 100;
+  int neighbourhood = 30;
 
   // dimensions of the accumulator
   int phiDim = (int) (Math.PI / discretizationStepsPhi);
@@ -111,14 +111,16 @@ void hough(PImage edgeImg, int nLines) {
 
 
 
-  // Visualizing hough image
-  //PImage houghImg = createImage(rDim + 2, phiDim + 2, ALPHA);
-  //for (int i = 0; i < accumulator.length; i++) {
-  //  houghImg.pixels[i] = color(min(255, accumulator[i]));
-  //}
-  //// You may want to resize the accumulator to make it easier to see:
-  //houghImg.resize(800, 800);
-  //houghImg.updatePixels();
+   //Visualizing hough image
+  PImage houghImg = createImage(rDim + 2, phiDim + 2, ALPHA);
+  for (int i = 0; i < accumulator.length; i++) {
+    houghImg.pixels[i] = color(min(255, accumulator[i]));
+  }
+  //You may want to resize the accumulator to make it easier to see:
+  houghImg.resize(800, 800);
+  houghImg.updatePixels();
+  
+  image(houghImg,edgeImg.width,0);
   //return houghImg;
 
   //showing lines

@@ -97,8 +97,8 @@ PImage filterThres(PImage img) {
 }
 
 Boolean verifiesProperties(color c) {
-  Boolean hue = hue(c)>102 && hue(c)<133;
-  Boolean brightness = brightness(c)>23 && brightness(c)<221;
-  Boolean saturation = saturation(c)>32 && saturation(c)<234;
+  Boolean hue = hue(c)>91 && hue(c)<138;
+  Boolean brightness = brightness(c)>58 && brightness(c)<148;
+  Boolean saturation = saturation(c)>76 && saturation(c)<141;
   return hue && brightness && saturation;
 }

@@ -4,14 +4,14 @@
  size(1600, 600);
  }
  void setup() {
- img = loadImage("boardRaf3.jpg");
+ img = loadImage("board4.jpg");
  }
  void draw() {
- background(0,0,0);
+ background(255);
  PImage sob = sobel(filterThres(img));
  
  image(img, 0, 0,img.width/2,img.height/2);
- hough(sob,11);
+ hough(sob,6);
  image(sob,img.width/2,0,sob.width/2,sob.height/2);
  
  //hough(sobel(filterThres(img)),72);
