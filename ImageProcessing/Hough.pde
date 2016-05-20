@@ -2,8 +2,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-float MAX_QUAD_AREA = 200000;
-float MIN_QUAD_AREA = 20000;
+
 
 
 class HoughComparator implements java.util.Comparator<Integer> {
@@ -51,7 +50,6 @@ void hough(PImage edgeImg, int nLines) {
   ArrayList<Integer> bestCandidates = new ArrayList();
   ArrayList<PVector> bestLines = new ArrayList();
   int minVotes = 100;
-  int neighbourhood = 30;
 
   // dimensions of the accumulator
   int phiDim = (int) (Math.PI / discretizationStepsPhi);
@@ -95,10 +93,10 @@ void hough(PImage edgeImg, int nLines) {
       if (accumulator[idx] > minVotes) {
         boolean bestCandidate=true;
         // iterate over the neighbourhood
-        for (int dPhi=-neighbourhood/2; dPhi < neighbourhood/2+1; dPhi++) {
+        for (int dPhi=-NEIGHBOURHOOD/2; dPhi < NEIGHBOURHOOD/2+1; dPhi++) {
           // check we are not outside the image
           if ( accPhi+dPhi < 0 || accPhi+dPhi >= phiDim) continue;
-          for (int dR=-neighbourhood/2; dR < neighbourhood/2 +1; dR++) {
+          for (int dR=-NEIGHBOURHOOD/2; dR < NEIGHBOURHOOD/2 +1; dR++) {
             // check we are not outside the image
             if (accR+dR < 0 || accR+dR >= rDim) continue;
             int neighbourIdx = (accPhi + dPhi + 1) * (rDim + 2) + accR + dR + 1;
