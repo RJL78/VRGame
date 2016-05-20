@@ -4,21 +4,32 @@ PImage blur(PImage img) {
     { 12, 15, 12 }, 
     { 9, 12, 9 }};
 
-  float weight =115;
+  float weight =107;
   // create a greyscale image (type: ALPHA) for output
 
   PImage result = createImage(img.width, img.height, ALPHA);
+  for (int x=0; x<img.width;x++) {
+    for (int y=0; y<img.height;y++) {
+       result.pixels[x+y*img.width]=img.pixels[x+y*img.width];
+    }
+  }
   int N = 3;
   for (int x=1; x<img.width-1; x++) {
     for (int y=1; y<img.height-1; y++) {
-      int sum = 0;
+      int redsum = 0;
+      int greensum = 0;
+      int bluesum = 0;
       for (int i = x - N/2; i<(x+1+N/2); i++) {
         for (int j = y - N/2; j<(y+1+N/2); j++) {
-          sum += brightness(img.pixels[i+j*img.width])*kernel[j-y+N/2][i-x+N/2];
+          redsum += red(img.pixels[i+j*img.width])*kernel[j-y+N/2][i-x+N/2];
+          greensum += green(img.pixels[i+j*img.width])*kernel[j-y+N/2][i-x+N/2];
+          bluesum += blue(img.pixels[i+j*img.width])*kernel[j-y+N/2][i-x+N/2];
         }
       }
-      sum /= weight;
-      result.pixels[x+y*img.width] = color(sum);
+      redsum /= weight;
+      bluesum /= weight;
+      greensum /= weight;
+      result.pixels[x+y*img.width] = color(redsum,greensum,bluesum);
     }
   }
   return result;

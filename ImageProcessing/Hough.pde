@@ -45,8 +45,8 @@ PVector intersection(PVector v1, PVector v2) {
 
 void hough(PImage edgeImg, int nLines) {
 
-  float discretizationStepsPhi = 0.06f;
-  float discretizationStepsR = 2.5f;
+  float discretizationStepsPhi = 0.07f;
+  float discretizationStepsR = 3.4f;
   ArrayList<Integer> bestCandidates = new ArrayList();
   ArrayList<PVector> bestLines = new ArrayList();
 
