@@ -49,7 +49,6 @@ void hough(PImage edgeImg, int nLines) {
   float discretizationStepsR = 2.5f;
   ArrayList<Integer> bestCandidates = new ArrayList();
   ArrayList<PVector> bestLines = new ArrayList();
-  int minVotes = 100;
 
   // dimensions of the accumulator
   int phiDim = (int) (Math.PI / discretizationStepsPhi);
@@ -90,7 +89,7 @@ void hough(PImage edgeImg, int nLines) {
     for (int accPhi = 0; accPhi < phiDim; accPhi++) {
       // compute current index in the accumulator
       int idx = (accPhi + 1) * (rDim + 2) + accR + 1;
-      if (accumulator[idx] > minVotes) {
+      if (accumulator[idx] > MIN_VOTES) {
         boolean bestCandidate=true;
         // iterate over the neighbourhood
         for (int dPhi=-NEIGHBOURHOOD/2; dPhi < NEIGHBOURHOOD/2+1; dPhi++) {
@@ -159,7 +158,7 @@ void hough(PImage edgeImg, int nLines) {
 
     // Finally, plot the lines
     stroke(204, 102, 0);
-    if (y0 > 0) {
+     if (y0 > 0) {
       if (x1 > 0)
         line(x0/2, y0/2, x1/2, y1/2);
       else if (y2 > 0)
@@ -180,26 +179,28 @@ void hough(PImage edgeImg, int nLines) {
   //Building Quad Graph
   QuadGraph quadGraph = new QuadGraph();
   quadGraph.build(bestLines, edgeImg.width, edgeImg.height);
+  
+  
   List<int[]> quads = quadGraph.findCycles();
+  boolean bestQuadFound = false;
   for (int[] quad : quads) {
+    
     PVector l1 = bestLines.get(quad[0]);
     PVector l2 = bestLines.get(quad[1]);
     PVector l3 = bestLines.get(quad[2]);
     PVector l4 = bestLines.get(quad[3]);
-    // (intersection() is a simplified version of the
-    // intersections() method you wrote last week, that simply
-    // return the coordinates of the intersection between 2 lines)
+   
     PVector c12 = intersection(l1, l2);
     PVector c23 = intersection(l2, l3);
     PVector c34 = intersection(l3, l4);
     PVector c41 = intersection(l4, l1);
-    if (goodQuad(quadGraph, c12, c23, c34, c41)) {
+    
+    if (goodQuad(quadGraph, c12, c23, c34, c41) && !bestQuadFound) {
+      bestQuadFound = true;
+      
+      
       // Choose a random, semi-transparent colour
-      Random random = new Random();
-      fill(color(min(255, random.nextInt(300)), 
-        min(255, random.nextInt(300)), 
-        min(255, random.nextInt(300)), 50));
-      quad(c12.x+edgeImg.width/2, c12.y, c23.x+edgeImg.width/2, c23.y, c34.x+edgeImg.width/2, c34.y, c41.x+edgeImg.width/2, c41.y);
+  
     }
   }
 
