@@ -2,14 +2,14 @@
 //  These thresholds are exclusive
 float MAX_QUAD_AREA = 200000;
 float MIN_QUAD_AREA = 20000;
-int HUE_MIN = 96; 
-int HUE_MAX = 137; 
+int HUE_MIN = 43; 
+int HUE_MAX = 136; 
 int BRIGHTNESS_MIN = 65;
-int BRIGHTNESS_MAX = 218;
-int SATURATION_MIN = 54;
-int SATURATION_MAX = 123;
-int NEIGHBOURHOOD = 30;
-int MIN_VOTES = 100;
+int BRIGHTNESS_MAX = 163;
+int SATURATION_MIN = 21;
+int SATURATION_MAX = 92;
+int NEIGHBOURHOOD = 25;
+int MIN_VOTES = 200;
 
 PGraphics bestQuadFrame; 
 PGraphics houghAccFrame; 
