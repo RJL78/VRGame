@@ -1,10 +1,10 @@
-PImage convolute(PImage img) {
+PImage blur(PImage img) {
 
-  float[][] kernel = { { 0, 0, 0 }, 
-    { 1, 0, -1 }, 
-    { 0, 0, 0 }};
+  float[][] kernel = { { 9, 12, 9 }, 
+    { 12, 15, 12 }, 
+    { 9, 12, 9 }};
 
-  float weight =1.f;
+  float weight =115;
   // create a greyscale image (type: ALPHA) for output
 
   PImage result = createImage(img.width, img.height, ALPHA);
@@ -21,12 +21,6 @@ PImage convolute(PImage img) {
       result.pixels[x+y*img.width] = color(sum);
     }
   }
-  // for each (x,y) pixel in the image:
-  // - multiply intensities for pixels in the range
-  // (x - N/2, y - N/2) to (x + N/2, y + N/2) by the
-  // corresponding weights in the kernel matrix
-  // - sum all these intensities and divide it by the weight
-  // - set result.pixels[y * img.width + x] to this value
   return result;
 }
 
@@ -97,8 +91,8 @@ PImage filterThres(PImage img) {
 }
 
 Boolean verifiesProperties(color c) {
-  Boolean hue = hue(c)>91 && hue(c)<138;
-  Boolean brightness = brightness(c)>58 && brightness(c)<148;
-  Boolean saturation = saturation(c)>76 && saturation(c)<141;
+  Boolean hue = hue(c)>96 && hue(c)<137;
+  Boolean brightness = brightness(c)>65 && brightness(c)<218;
+  Boolean saturation = saturation(c)>54 && saturation(c)<123;
   return hue && brightness && saturation;
 }
