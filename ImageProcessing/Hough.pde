@@ -169,7 +169,7 @@ void hough(PImage edgeImg, int nLines) {
       c12.mult(2);
       c23.mult(2);
       c34.mult(2);
-      c41.mult(2);
+      c41.mult(2); 
       bestQuadFrame.line(c12.x,c12.y,c23.x,c23.y); 
       bestQuadFrame.line(c23.x,c23.y,c34.x,c34.y); 
       bestQuadFrame.line(c34.x,c34.y,c41.x,c41.y); 

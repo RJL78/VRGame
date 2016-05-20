@@ -1,3 +1,7 @@
+
+// Overview of our pipeline : Input image -> Blurring -> Hue/Brightness/Saturation thresholding -> Sobel -> Hough transform
+// We know that this might not be what is expected, but this is what we found worked best. Blurring before the Hue/Brightness/Saturation thresholding also allows us to incoporate intensity thresholding (as a principle) in our pipeline
+
 // Tweakable variables - mess around with these if the board detection is suboptimal 
 //  These thresholds are exclusive
 float MAX_QUAD_AREA = 200000;
@@ -17,14 +21,15 @@ PGraphics sobelFrame;
 
 int INPUT_HEIGHT = 600; 
 int INPUT_WIDTH = 800;
+float scaleFactor = 1.5;
 
 PImage img;
 
 void settings() {
-  size(INPUT_WIDTH*3/2, INPUT_HEIGHT/2);
+  size( (int) (INPUT_WIDTH*3/scaleFactor),(int) (INPUT_HEIGHT/scaleFactor) );
 }
 void setup() {
-   img = loadImage("board2.jpg");
+   img = loadImage("board4.jpg");
    bestQuadFrame = createGraphics(INPUT_WIDTH,INPUT_HEIGHT,JAVA2D);
    houghAccFrame = createGraphics(INPUT_WIDTH,INPUT_HEIGHT,JAVA2D);
    sobelFrame    = createGraphics(INPUT_WIDTH,INPUT_HEIGHT,JAVA2D);
@@ -37,7 +42,7 @@ void draw() {
   
   
 
-  PImage sob = sobel(blur(filterThres(img)));
+  PImage sob = sobel(filterThres(blur(img)));
   sobelFrame.beginDraw();
   sobelFrame.image(sob,0,0);
   sobelFrame.endDraw();
@@ -50,8 +55,8 @@ void draw() {
   bestQuadFrame.endDraw();
   houghAccFrame.endDraw();
   
-  image(bestQuadFrame, 0            , 0 ,INPUT_WIDTH/2, INPUT_HEIGHT/2); 
-  image(houghAccFrame, INPUT_WIDTH/2, 0 ,INPUT_WIDTH/2, INPUT_HEIGHT/2);
-  image(sobelFrame   , INPUT_WIDTH  , 0 ,INPUT_WIDTH/2, INPUT_HEIGHT/2);
+  image(bestQuadFrame, 0                        , 0 ,INPUT_WIDTH/scaleFactor, INPUT_HEIGHT/scaleFactor); 
+  image(houghAccFrame, INPUT_WIDTH/scaleFactor  , 0 ,INPUT_WIDTH/scaleFactor, INPUT_HEIGHT/scaleFactor);
+  image(sobelFrame   , 2*INPUT_WIDTH/scaleFactor, 0 ,INPUT_WIDTH/scaleFactor, INPUT_HEIGHT/scaleFactor);
   
 }
