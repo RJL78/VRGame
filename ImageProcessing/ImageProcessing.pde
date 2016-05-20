@@ -15,8 +15,8 @@ PGraphics bestQuadFrame;
 PGraphics houghAccFrame; 
 PGraphics sobelFrame;
 
-INPUT_HEIGHT = 600; 
-INPUT_WITDH = 800;
+int INPUT_HEIGHT = 600; 
+int INPUT_WIDTH = 800;
 
 PImage img;
 
@@ -25,9 +25,9 @@ void settings() {
 }
 void setup() {
    img = loadImage("board2.jpg");
-   bestQuadFrame = createGraphics(img.width,img.height,JAVA2D);
-   houghAccFrame = createGraphics(img.width,img.height,JAVA2D);
-   sobelFrame    = createGraphics(img.width,img.height,JAVA2D);
+   bestQuadFrame = createGraphics(INPUT_WIDTH,INPUT_HEIGHT,JAVA2D);
+   houghAccFrame = createGraphics(INPUT_WIDTH,INPUT_HEIGHT,JAVA2D);
+   sobelFrame    = createGraphics(INPUT_WIDTH,INPUT_HEIGHT,JAVA2D);
   noLoop();
 }
 
@@ -44,18 +44,14 @@ void draw() {
   
  
   bestQuadFrame.beginDraw();
+  houghAccFrame.beginDraw();
   bestQuadFrame.image(img,0,0);
   hough(sob, 6);
   bestQuadFrame.endDraw();
+  houghAccFrame.endDraw();
   
-  image(sobelFrame,0,0,img.width/2, img.height/2); 
-  image(bestQuad*Frame,img.width,0, img.width/2, img.height/2);
- 
-  
- 
-  
-  image(sob, img.width/2, 0, sob.width/2, sob.height/2);
-  
-  
+  image(bestQuadFrame, 0            , 0 ,INPUT_WIDTH/2, INPUT_HEIGHT/2); 
+  image(houghAccFrame, INPUT_WIDTH/2, 0 ,INPUT_WIDTH/2, INPUT_HEIGHT/2);
+  image(sobelFrame   , INPUT_WIDTH  , 0 ,INPUT_WIDTH/2, INPUT_HEIGHT/2);
   
 }

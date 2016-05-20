@@ -125,15 +125,15 @@ void hough(PImage edgeImg, int nLines) {
     houghImg.pixels[i] = color(min(255, accumulator[i]));
   }
   //You may want to resize the accumulator to make it easier to see:
-  houghImg.resize(800, 800);
+  houghImg.resize(INPUT_WIDTH, INPUT_HEIGHT);
   houghImg.updatePixels();
+  houghAccFrame.image(houghImg,0,0);
+  
 
-  image(houghImg, edgeImg.width, 0);
-  //return houghImg;
+  
 
-  //showing lines
+
   for (int i = 0; i < bestCandidates.size() && i<nLines; i++) {
-
     int idx = bestCandidates.get(i);
     // first, compute back the (r, phi) polar coordinates:
     int accPhi = (int) (idx / (rDim + 2)) - 1;
@@ -141,39 +141,6 @@ void hough(PImage edgeImg, int nLines) {
     float r = (accR - (rDim - 1) * 0.5f) * discretizationStepsR;
     float phi = accPhi * discretizationStepsPhi;
     bestLines.add(new PVector(r, phi));
-    // Cartesian equation of a line: y = ax + b
-    // in polar, y = (-cos(phi)/sin(phi))x + (r/sin(phi))
-    // => y = 0 : x = r / cos(phi)
-    // => x = 0 : y = r / sin(phi)
-    // compute the intersection of this line with the 4 borders of
-    // the image
-    int x0 = 0;
-    int y0 = (int) (r/tabSin[accPhi]);
-    int x1 = (int) (r/tabCos[accPhi]);
-    int y1 = 0;
-    int x2 = edgeImg.width;
-    int y2 = (int) ( -tabCos[accPhi] / tabSin[accPhi] * x2 + r/ tabSin[accPhi]);
-    int y3 = edgeImg.width;
-    int x3 = (int) ( -(y3 - r / tabSin[accPhi]) * (tabSin[accPhi] / tabCos[accPhi]));
-
-    // Finally, plot the lines
-    stroke(204, 102, 0);
-     if (y0 > 0) {
-      if (x1 > 0)
-        line(x0/2, y0/2, x1/2, y1/2);
-      else if (y2 > 0)
-        line(x0/2, y0/2, x2/2, y2/2);
-      else
-        line(x0/2, y0/2, x3/2, y3/2);
-    } else {
-      if (x1 > 0) {
-        if (y2 > 0)
-          line(x1/2, y1/2, x2/2, y2/2);
-        else
-          line(x1/2, y1/2, x3/2, y3/2);
-      } else
-        line(x2/2, y2/2, x3/2, y3/2);
-    }
   }
 
   //Building Quad Graph
@@ -197,6 +164,22 @@ void hough(PImage edgeImg, int nLines) {
     
     if (goodQuad(quadGraph, c12, c23, c34, c41) && !bestQuadFound) {
       bestQuadFound = true;
+      bestQuadFrame.stroke(204, 102, 0);
+      bestQuadFrame.fill(255, 128, 0);
+      c12.mult(2);
+      c23.mult(2);
+      c34.mult(2);
+      c41.mult(2);
+      bestQuadFrame.line(c12.x,c12.y,c23.x,c23.y); 
+      bestQuadFrame.line(c23.x,c23.y,c34.x,c34.y); 
+      bestQuadFrame.line(c34.x,c34.y,c41.x,c41.y); 
+      bestQuadFrame.line(c41.x,c41.y,c12.x,c12.y); 
+      
+      bestQuadFrame.ellipse(c12.x, c12.y, 10, 10);
+      bestQuadFrame.ellipse(c23.x, c23.y, 10, 10);
+      bestQuadFrame.ellipse(c34.x, c34.y, 10, 10);
+      bestQuadFrame.ellipse(c41.x, c41.y, 10, 10);
+      
       
       
       // Choose a random, semi-transparent colour
