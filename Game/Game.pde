@@ -20,6 +20,9 @@ boolean zoomPlusClicked = false;
 boolean zoomMinusClicked = false;
 
 float minVelocityForScore = 2;
+ImageProcessing imgproc;
+PVector rot;
+//PImage imgTest;
 
 
 
@@ -37,6 +40,14 @@ void setup() {
   directionalLight(50, 100, 125, 0, -1, 0);
   ambientLight(102, 102, 102);
   setupScoreBoard();
+  //imgTest = loadImage("board.jpg");
+  
+  imgproc = new ImageProcessing();
+  String []args = {"Image processing window"};
+  PApplet.runSketch(args, imgproc);
+  
+  
+  
   
 }
 
@@ -44,8 +55,9 @@ void draw() {
   perspective();
   background(backgroundColor);
   stroke(0, 0, 255);
+  rot = imgproc.getRotation();
   if (run) {  
-    mover.update(); 
+    mover.update(rot); 
     mover.checkCollisions();
     displayBoard();
     displayBall();
