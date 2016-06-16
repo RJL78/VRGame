@@ -1,4 +1,5 @@
 PImage blur(PImage img) {
+  
 
   float[][] kernel = { { 9, 12, 9 }, 
     { 12, 15, 12 }, 
@@ -36,6 +37,8 @@ PImage blur(PImage img) {
 }
 
 PImage sobel(PImage img) {
+  
+
   float[][] hKernel = { { 0, 1, 0 }, 
     { 0, 0, 0 }, 
     { 0, -1, 0 } };

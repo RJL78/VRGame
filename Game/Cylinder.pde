@@ -86,7 +86,7 @@ void displaySelector() {
   ambientLight(255, 200, 150);
   noStroke();
   background(backgroundShiftColor);
-  camera(screenWidth/2, screenHeight/2, cameraDist, screenWidth/2, screenHeight/2, 0, 0, 1, 0);
+  //camera(screenWidth/2, screenHeight/2, cameraDist, screenWidth/2, screenHeight/2, 0, 0, 1, 0);
   
   ortho();
 

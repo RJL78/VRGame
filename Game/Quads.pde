@@ -28,11 +28,11 @@ class QuadGraph {
       }
     }
   }
-
   /** Returns true if polar lines 1 and 2 intersect 
    * inside an area of size (width, height)
    */
-  boolean intersect(PVector line1, PVector line2, int width, int height) {
+
+  Boolean intersect (PVector line1, PVector line2, int width, int height) {
 
     double sin_t1 = Math.sin(line1.y);
     double sin_t2 = Math.sin(line2.y);
@@ -46,10 +46,11 @@ class QuadGraph {
     int x = (int) ((r2 * sin_t1 - r1 * sin_t2) / denom);
     int y = (int) ((-r2 * cos_t1 + r1 * cos_t2) / denom);
 
-    if (0 <= x && 0 <= y && width >= x && height >= y)
+    if (0 <= x && 0 <= y && width >= x && height >= y) {
       return true;
-    else
+    } else {
       return false;
+    }
   }
 
   List<int[]> findCycles() {
@@ -60,17 +61,10 @@ class QuadGraph {
         findNewCycles(new int[] {graph[i][j]});
       }
     }
-    for (int[] cy : cycles) {
-      String s = "" + cy[0];
-      for (int i = 1; i < cy.length; i++) {
-        s += "," + cy[i];
-      }
-      System.out.println(s);
-    }
     return cycles;
   }
 
-  void findNewCycles(int[] path)
+  void findNewCycles (int[] path)
   {
     int n = path[0];
     int x;
@@ -230,7 +224,7 @@ class QuadGraph {
       || (i1<0 && i2<0 && i3<0 && i4<0))
       return true;
     else 
-    System.out.println("Eliminating non-convex quad");
+ 
     return false;
   }
 
@@ -250,8 +244,6 @@ class QuadGraph {
 
     float area = Math.abs(0.5f * (i1 + i2 + i3 + i4));
 
-    //System.out.println("Area = "+area);
-
     boolean valid = (area < max_area && area > min_area);
 
     if (!valid) System.out.println("Area out of range");
@@ -263,7 +255,7 @@ class QuadGraph {
    * (the quad representing our board should be close to a rectangle)
    */
   boolean nonFlatQuad(PVector c1, PVector c2, PVector c3, PVector c4) {
-    
+
     // cos(70deg) ~= 0.3
     float min_cos = 0.5f;
 
@@ -280,7 +272,6 @@ class QuadGraph {
     if (cos1 < min_cos && cos2 < min_cos && cos3 < min_cos && cos4 < min_cos)
       return true;
     else {
-      System.out.println("Flat quad");
       return false;
     }
   }

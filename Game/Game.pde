@@ -19,10 +19,21 @@ Boolean run = true;
 boolean zoomPlusClicked = false;
 boolean zoomMinusClicked = false;
 
+
+int INPUT_HEIGHT = 480; 
+int INPUT_WIDTH = 640;
+
 float minVelocityForScore = 2;
 ImageProcessing imgproc;
 PVector rot;
-//PImage imgTest;
+TwoDThreeD rtC;
+Movie vid;
+PImage img = new PImage();
+boolean pauseVid = false;
+
+PGraphics videoFrame; 
+int videoFrameHeight = screenHeight/5; 
+int videoFrameWidth = screenWidth/5;
 
 
 
@@ -35,28 +46,33 @@ void settings() {
 
 
 void setup() {
-
-//  camera(screenWidth/2, 0.75*screenHeight/2, cameraDist, screenWidth/2, screenHeight/2, 0, 0, 1, 0);
+  
+  rtC = new TwoDThreeD(INPUT_WIDTH, INPUT_HEIGHT);
+  vid = new Movie(this, "testvideo.mp4"); 
+  vid.loop();
+  
+  videoFrame =  createGraphics(videoFrameWidth,videoFrameHeight,JAVA2D);  
   directionalLight(50, 100, 125, 0, -1, 0);
   ambientLight(102, 102, 102);
   setupScoreBoard();
-  //imgTest = loadImage("board.jpg");
-  
   imgproc = new ImageProcessing();
   String []args = {"Image processing window"};
-  PApplet.runSketch(args, imgproc);
-  
-  
-  
-  
+  PApplet.runSketch(args,imgproc);
+  img = createImage(INPUT_WIDTH,INPUT_HEIGHT,RGB);
+//  img = loadImage("13479686_10209551319840722_193289221_n.png");
+
 }
 
 void draw() {
   perspective();
   background(backgroundColor);
   stroke(0, 0, 255);
-  rot = imgproc.getRotation();
+
+  
   if (run) {  
+    img = vid;
+    img.loadPixels();
+    rot = imgproc.getRotation(img);
     mover.update(rot); 
     mover.checkCollisions();
     displayBoard();
@@ -66,7 +82,27 @@ void draw() {
     displaySelector();
   }
   drawScoreBoard();
+  
+  videoFrame.beginDraw(); 
+  PImage imgCopy = img.copy();
+  imgCopy.resize(videoFrameWidth,videoFrameHeight);
+  videoFrame.background(255);
+  videoFrame.image(imgCopy,0,0);
+  videoFrame.endDraw();
+  
+  
+  
+  image(videoFrame, screenWidth-videoFrameWidth, 0, videoFrameWidth, videoFrameHeight);
+ 
+  
 }
+
+
+void movieEvent(Movie m) {
+  m.read();
+}
+
+
 
 /** --- IO CONTROLS ---- **/
 
@@ -76,6 +112,8 @@ void draw() {
 void mousePressed(){
   zoomPlusClicked = mouseOverPlusZoom();
   zoomMinusClicked = mouseOverMinusZoom();
+  pauseVid = (pauseVid)? false : true;
+  
 }
 
 void keyPressed() {
@@ -139,6 +177,7 @@ void mouseReleased() {
   if (!run) {
     PVector cylinderPositionFromCenter = new PVector(mouseX-screenWidth/2, mouseY-screenHeight/2);
     boolean collision = false;
+    
     for (int i=0; i < cylinders.size(); i++ ) {
       if (cylinderPositionFromCenter.dist(cylinderPositions.get(i))
         <= 2*cylinderBaseSize ) {
@@ -150,6 +189,7 @@ void mouseReleased() {
       <= (cylinderBaseSize+sphereSize)) {
       collision = true;
     }
+    
     if ( ! collision && cylinderPositionFromCenter.x <  boxWidth/2-cylinderBaseSize  && cylinderPositionFromCenter.x >- boxWidth/2 +cylinderBaseSize &&
       cylinderPositionFromCenter.y <  boxDepth/2 - cylinderBaseSize && cylinderPositionFromCenter.y >- boxDepth/2 +cylinderBaseSize) {
       cylinders.add(makeCylinder());

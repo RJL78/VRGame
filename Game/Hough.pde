@@ -27,9 +27,6 @@ ArrayList<PVector> getIntersections( List<PVector> lines) {
       // compute the intersection and add it to ’intersections’
       PVector intersectionPoint = intersection(line1, line2);
       intersections.add(intersectionPoint);
-      // draw the intersection;
-      fill(255, 128, 0);
-      ellipse(intersectionPoint.x, intersectionPoint.y, 10, 10);
     }
   }
   return intersections;
@@ -44,12 +41,14 @@ PVector intersection(PVector v1, PVector v2) {
 
 
 List<PVector> hough(PImage edgeImg, int nLines) {
-  
+
+
+
   PVector tl, bl, br, tr; 
   List<PVector> corners = new ArrayList();
 
-  float discretizationStepsPhi = 0.07f;
-  float discretizationStepsR = 3.4f;
+  float discretizationStepsPhi = 0.03f;
+  float discretizationStepsR = 3.3f;
   ArrayList<Integer> bestCandidates = new ArrayList();
   ArrayList<PVector> bestLines = new ArrayList();
 
@@ -130,10 +129,11 @@ List<PVector> hough(PImage edgeImg, int nLines) {
   //You may want to resize the accumulator to make it easier to see:
   houghImg.resize(INPUT_WIDTH, INPUT_HEIGHT);
   houghImg.updatePixels();
-  houghAccFrame.image(houghImg,0,0);
-  
+  houghAccFrame.beginDraw();
+  houghAccFrame.image(houghImg, 0, 0);
+  houghAccFrame.endDraw();
 
-  
+
 
 
   for (int i = 0; i < bestCandidates.size() && i<nLines; i++) {
@@ -146,72 +146,128 @@ List<PVector> hough(PImage edgeImg, int nLines) {
     bestLines.add(new PVector(r, phi));
   }
 
+
   //Building Quad Graph
   QuadGraph quadGraph = new QuadGraph();
   quadGraph.build(bestLines, edgeImg.width, edgeImg.height);
-  
-  
+
+
   List<int[]> quads = quadGraph.findCycles();
+  
+  
+  
+  
   boolean bestQuadFound = false;
   for (int[] quad : quads) {
-    if(!bestQuadFound){
+    if (!bestQuadFound) {
       PVector l1 = bestLines.get(quad[0]);
-    PVector l2 = bestLines.get(quad[1]);
-    PVector l3 = bestLines.get(quad[2]);
-    PVector l4 = bestLines.get(quad[3]);
-   
+      PVector l2 = bestLines.get(quad[1]);
+      PVector l3 = bestLines.get(quad[2]);
+      PVector l4 = bestLines.get(quad[3]);
+
+      PVector c12 = intersection(l1, l2);
+      PVector c23 = intersection(l2, l3);
+      PVector c34 = intersection(l3, l4);
+      PVector c41 = intersection(l4, l1);
+
+      if (goodQuad(quadGraph, c12, c23, c34, c41)) {
+
+        bestQuadFound = true;
+        videoFrame.beginDraw();
+        videoFrame.stroke(204, 102, 0);
+        videoFrame.fill(255, 128, 0);
+
+        c12.mult(2);
+        c23.mult(2);
+        c34.mult(2);
+        c41.mult(2); 
+
+        PVector a =  new PVector ( c12.x * videoFrameWidth / INPUT_WIDTH, c12.y * videoFrameHeight/ INPUT_HEIGHT)  ; 
+        PVector b =  new PVector ( c23.x * videoFrameWidth / INPUT_WIDTH, c23.y * videoFrameHeight/ INPUT_HEIGHT)  ;  
+        PVector c =  new PVector ( c34.x * videoFrameWidth / INPUT_WIDTH, c34.y * videoFrameHeight/ INPUT_HEIGHT)  ;
+        PVector d =  new PVector ( c41.x * videoFrameWidth / INPUT_WIDTH, c41.y * videoFrameHeight/ INPUT_HEIGHT)  ; 
+
+
+        videoFrame.line(a.x, a.y, b.x, b.y); 
+        videoFrame.line(b.x, b.y, c.x, c.y); 
+        videoFrame.line(c.x, c.y, d.x, d.y); 
+        videoFrame.line(d.x, d.y, a.x, a.y); 
+        /*    
+         videoFrame.ellipse(c12.x, c12.y, 10, 10);
+         videoFrame.ellipse(c23.x, c23.y, 10, 10);
+         videoFrame.ellipse(c34.x, c34.y, 10, 10);
+         videoFrame.ellipse(c41.x, c41.y, 10, 10);
+         */
+
+        br = new PVector(c12.x, c12.y);
+        tr = new PVector(c23.x, c23.y);
+        tl = new PVector(c34.x, c34.y);
+        bl = new PVector(c41.x, c41.y);
+        corners.add(tl);
+        corners.add(tr);
+        corners.add(br);
+        corners.add(bl);
+
+        videoFrame.endDraw();
+
+
+
+
+        // Choose a random, semi-transparent colour
+      }
+    }
+  }
+
+  //showing intersections; 
+  getIntersections(bestLines);
+  
+  
+
+  return corners;
+}
+
+List<PVector> bestQuadCorners(List<int[]> quads, List<PVector> bestLines, QuadGraph quadGraph) {
+  List<PVector> corners = new ArrayList<>();
+  double bestError = Double.POSITIVE_INFINITY;
+  PVector bestc12= new PVector();
+  PVector bestc23= new PVector();
+  PVector bestc34= new PVector();
+  PVector bestc41= new PVector();
+  for (int i = 0; i<quads.size(); i++) {
+    PVector l1 = bestLines.get(quads.get(i)[0]);
+    PVector l2 = bestLines.get(quads.get(i)[1]);
+    PVector l3 = bestLines.get(quads.get(i)[2]);
+    PVector l4 = bestLines.get(quads.get(i)[3]);
+
     PVector c12 = intersection(l1, l2);
     PVector c23 = intersection(l2, l3);
     PVector c34 = intersection(l3, l4);
     PVector c41 = intersection(l4, l1);
     
     if (goodQuad(quadGraph, c12, c23, c34, c41)) {
-      
-      bestQuadFound = true;
-      bestQuadFrame.stroke(204, 102, 0);
-      bestQuadFrame.fill(255, 128, 0);
-      c12.mult(2);
-      c23.mult(2);
-      c34.mult(2);
-      c41.mult(2); 
-      
-      
-      bestQuadFrame.line(c12.x,c12.y,c23.x,c23.y); 
-      bestQuadFrame.line(c23.x,c23.y,c34.x,c34.y); 
-      bestQuadFrame.line(c34.x,c34.y,c41.x,c41.y); 
-      bestQuadFrame.line(c41.x,c41.y,c12.x,c12.y); 
-      
-      bestQuadFrame.ellipse(c12.x, c12.y, 10, 10);
-      bestQuadFrame.ellipse(c23.x, c23.y, 10, 10);
-      bestQuadFrame.ellipse(c34.x, c34.y, 10, 10);
-      bestQuadFrame.ellipse(c41.x, c41.y, 10, 10);
-      
-      
-      br = new PVector(c12.x, c12.y);
-      tr = new PVector(c23.x, c23.y);
-      tl = new PVector(c34.x, c34.y);
-      bl = new PVector(c41.x, c41.y);
-      corners.add(tl);
-      corners.add(tr);
-      corners.add(br);
-      corners.add(bl);
-      
-      
-      
-      
-      // Choose a random, semi-transparent colour
-  
-    }
-    }
     
-    
+      double parallelError = 0.0;
+      float diff = abs(bestLines.get(quads.get(i)[0]).y - bestLines.get(quads.get(i)[2]).y);
+      parallelError += min(diff, abs(diff-PI));
+      diff = abs(bestLines.get(quads.get(i)[1]).y - bestLines.get(quads.get(i)[3]).y);
+      parallelError += min(diff, abs(diff-PI));
+      if (bestError>parallelError) {
+        bestc12=c12;
+        bestc23=c23;
+        bestc34=c34;
+        bestc41=c41;
+        bestError = parallelError;
+      }
+    }
   }
-
-  //showing intersections; 
-  getIntersections(bestLines);
-  
-  return corners;  
+        
+  corners.add(bestc12);
+  corners.add(bestc23);
+  corners.add(bestc34);
+  corners.add(bestc41);
+  return corners;
 }
+
 
 boolean goodQuad(QuadGraph quadGraph, PVector c1, PVector c2, PVector c3, PVector c4) {
   return (quadGraph.nonFlatQuad(c1, c2, c3, c4)) &&
