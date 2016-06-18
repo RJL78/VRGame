@@ -8,11 +8,16 @@ class Mover {
   Mover() {
   }
   
-  
+  float clampAngle(float angle){
+    if(angle < -PI/3.0) return -PI/3.0;
+    if(angle > PI/3.0) return PI/3.0;
+    return angle;
+  }
   // update() modifies the physical forces at work according to the inclination of the board and the speed of the ball
   void update(PVector rotation) {
-    currZIncline = rotation.x;
-    currXIncline = -rotation.z;
+    currZIncline = clampAngle(rotation.y);
+    currXIncline = clampAngle(-rotation.x);
+    
     gravityForce.x =  sin(currZIncline) * gravityConstant; 
     gravityForce.y = - sin(currXIncline) * gravityConstant;
     PVector friction = sphereVelocity.get();

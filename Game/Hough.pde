@@ -29,7 +29,7 @@ ArrayList<PVector> getIntersections( List<PVector> lines) {
       intersections.add(intersectionPoint);
       // draw the intersection;
       fill(255, 128, 0);
-      ellipse(intersectionPoint.x, intersectionPoint.y, 10, 10);
+      //ellipse(intersectionPoint.x, intersectionPoint.y, 10, 10);
     }
   }
   return intersections;
@@ -120,7 +120,7 @@ List<PVector> hough(PImage edgeImg, int nLines) {
 
   Collections.sort(bestCandidates, new HoughComparator(accumulator));
 
-
+/*
 
   //Visualizing hough image
   PImage houghImg = createImage(rDim + 2, phiDim + 2, ALPHA);
@@ -133,7 +133,7 @@ List<PVector> hough(PImage edgeImg, int nLines) {
   houghAccFrame.image(houghImg,0,0);
   
 
-  
+  */
 
 
   for (int i = 0; i < bestCandidates.size() && i<nLines; i++) {
@@ -174,7 +174,7 @@ List<PVector> hough(PImage edgeImg, int nLines) {
       c23.mult(2);
       c34.mult(2);
       c41.mult(2); 
-      
+      /*
       
       bestQuadFrame.line(c12.x,c12.y,c23.x,c23.y); 
       bestQuadFrame.line(c23.x,c23.y,c34.x,c34.y); 
@@ -185,7 +185,7 @@ List<PVector> hough(PImage edgeImg, int nLines) {
       bestQuadFrame.ellipse(c23.x, c23.y, 10, 10);
       bestQuadFrame.ellipse(c34.x, c34.y, 10, 10);
       bestQuadFrame.ellipse(c41.x, c41.y, 10, 10);
-      
+      */
       
       br = new PVector(c12.x, c12.y);
       tr = new PVector(c23.x, c23.y);

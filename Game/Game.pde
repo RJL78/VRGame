@@ -23,9 +23,17 @@ float minVelocityForScore = 2;
 ImageProcessing imgproc;
 PVector rot;
 //PImage imgTest;
+Movie vid;
 
 
+PImage img = new PImage();
 
+PGraphics videoFrame; 
+int videoFrameHeight = screenHeight/5; 
+int videoFrameWidth = screenWidth/5;
+
+int pauseTime = 0;
+boolean pause = false;
 
 /** ---- MAIN METHODS ---- **/
 
@@ -35,13 +43,22 @@ void settings() {
 
 
 void setup() {
+  
+ vid = new Movie(this, "F:\\Programmation\\VRGame\\Game\\data\\testvideo.mp4"); 
+  vid.loop();
 
+
+videoFrame =  createGraphics(videoFrameWidth,videoFrameHeight,JAVA2D);
 //  camera(screenWidth/2, 0.75*screenHeight/2, cameraDist, screenWidth/2, screenHeight/2, 0, 0, 1, 0);
   directionalLight(50, 100, 125, 0, -1, 0);
   ambientLight(102, 102, 102);
   setupScoreBoard();
   //imgTest = loadImage("board.jpg");
+  //img = loadImage("F:\\Programmation\\VRGame\\Game\\data\\board3.jpg");
   
+  img = createImage(INPUT_WIDTH,INPUT_HEIGHT,RGB);
+  rtC = new TwoDThreeD(INPUT_WIDTH, INPUT_HEIGHT);
+ 
   imgproc = new ImageProcessing();
   String []args = {"Image processing window"};
   PApplet.runSketch(args, imgproc);
@@ -50,22 +67,41 @@ void setup() {
   
   
 }
+void movieEvent(Movie m) {
+  m.read();
+}
 
 void draw() {
   perspective();
   background(backgroundColor);
   stroke(0, 0, 255);
-  rot = imgproc.getRotation();
+  img = vid;
+    img.loadPixels();
+  rot = imgproc.getRotation(img);
   if (run) {  
     mover.update(rot); 
     mover.checkCollisions();
     displayBoard();
     displayBall();
     displayCylinders();
+    //delay(pauseTime);
+    
+    
   } else {
     displaySelector();
   }
   drawScoreBoard();
+  videoFrame.beginDraw(); 
+  PImage imgCopy = img.copy();
+  imgCopy.resize(videoFrameWidth,videoFrameHeight);
+  videoFrame.background(255);
+  videoFrame.image(imgCopy,0,0);
+  videoFrame.endDraw();
+  
+  
+  
+  image(videoFrame, screenWidth-videoFrameWidth, 0, videoFrameWidth, videoFrameHeight);
+  
 }
 
 /** --- IO CONTROLS ---- **/
@@ -73,9 +109,12 @@ void draw() {
 
 //The following two methods, keyPressed() and keyReleased() allow the user to move in and out of SHIFT mode
 
+
 void mousePressed(){
   zoomPlusClicked = mouseOverPlusZoom();
   zoomMinusClicked = mouseOverMinusZoom();
+  //pauseTime = (pauseTime == 0) ? 3000 : 0;
+  //pause = (pause)? false : true;
 }
 
 void keyPressed() {
