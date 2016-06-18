@@ -3,7 +3,7 @@
 /** ---- PHYSICAL CONSTANTS ---- **/
 static float normalForce = 1;
 static float mu = 0.01;
-static float gravityConstant = 0.3;
+static float gravityConstant = 10;
 static float elasticity = 0.8;
 
 /** ---- DIMENSION CONSTANTS ---- **/
@@ -45,9 +45,6 @@ void setup() {
   
   vid = new Movie(this, "testvideo.mp4"); 
   img = createImage(INPUT_WIDTH,INPUT_HEIGHT,RGB);
-  println(img.height);
-  
-  videoFrame =  createGraphics(videoFrameWidth,videoFrameHeight,JAVA2D);
   
   
   directionalLight(50, 100, 125, 0, -1, 0);
@@ -102,13 +99,16 @@ void keyPressed() {
   if (key == CODED && keyCode == SHIFT) {
     run = false;
   }
+  vid.pause();
   
 }
 
 void keyReleased() {
   if (!run && key == CODED && keyCode == SHIFT) {
     run = true;
+ 
   }
+  vid.play();
 }
 
 

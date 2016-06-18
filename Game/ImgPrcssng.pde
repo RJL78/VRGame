@@ -4,7 +4,7 @@ import processing.video.*;
 
 // Tweakable variables - mess around with these if the board detection is suboptimal 
 //  These thresholds are exclusive
-
+/*
 float MAX_QUAD_AREA = 200000;
 float MIN_QUAD_AREA = 20000;
 int HUE_MIN = 43; 
@@ -15,24 +15,24 @@ int SATURATION_MIN = 21;
 int SATURATION_MAX = 92;
 int NEIGHBOURHOOD = 25;
 int MIN_VOTES = 200;
-
-/*float MAX_QUAD_AREA = 200000;
- float MIN_QUAD_AREA = 15000;
- int HUE_MIN = 47; 
- int HUE_MAX = 119; 
- int BRIGHTNESS_MIN = 53;
- int BRIGHTNESS_MAX = 142;
- int SATURATION_MIN = 49;
- int SATURATION_MAX = 136;
- int NEIGHBOURHOOD = 25;
- int MIN_VOTES = 120;*/
+*/
+ float MAX_QUAD_AREA;
+ float MIN_QUAD_AREA;
+ int HUE_MIN ; 
+ int HUE_MAX ;
+ int BRIGHTNESS_MIN ;
+ int BRIGHTNESS_MAX ;
+ int SATURATION_MIN ;
+ int SATURATION_MAX;
+ int NEIGHBOURHOOD;
+ int MIN_VOTES;
 
 PGraphics bestQuadFrame; 
 PGraphics houghAccFrame; 
 PGraphics sobelFrame;
 
-int INPUT_HEIGHT = 600; 
-int INPUT_WIDTH = 800;
+int INPUT_HEIGHT = 480; 
+int INPUT_WIDTH = 640;
 float scaleFactor = 1.5;
 
 PImage sob = new PImage();
@@ -41,6 +41,7 @@ List<PVector> corners = new ArrayList();
 TwoDThreeD rtC;
 Movie vid;
 PImage img;
+PGraphics camFrame;
 
 
 
@@ -52,17 +53,23 @@ class ImageProcessing extends PApplet {
   float rx2, ry2, rz2;
   float rx3, ry3, rz3;
 
-  //PImage img;
-
-  /*public ImageProcessing(PImage image){
-   img = image;
-   rx = ry = rz = 0;
-   }*/
-
   void settings() {
     size( INPUT_WIDTH, INPUT_HEIGHT);
   }
+  
   void setup() {
+    
+    
+ MAX_QUAD_AREA = 45000;
+ MIN_QUAD_AREA = 10364;
+ HUE_MIN = 60; 
+ HUE_MAX = 130; 
+ BRIGHTNESS_MIN = 50;
+ BRIGHTNESS_MAX = 140;
+ SATURATION_MIN = 90;
+ SATURATION_MAX = 130;
+ NEIGHBOURHOOD = 20;
+ MIN_VOTES = 20;
     
     
     rtC = new TwoDThreeD(INPUT_WIDTH, INPUT_HEIGHT);
@@ -71,20 +78,23 @@ class ImageProcessing extends PApplet {
     rx1 = rx2 = rx3 = 0;
     ry1 = ry2 = ry3 = 0;
     rz1 = rz2 = rz3 = 0;
-
-    
-
+ 
     vid.loop();
-   
+    vid.speed(1.0);
+    camFrame = createGraphics(INPUT_WIDTH,INPUT_HEIGHT,JAVA2D);
   }
 
   void draw() {
     vid.read();
-    img = vid;
-    img.loadPixels();
-    image(vid,0,0,INPUT_WIDTH,INPUT_HEIGHT);
-    mover.update(imgproc.getRotation(img));
     
+    img = vid;
+    
+
+   
+    img.loadPixels();
+        background(img);
+    mover.update(imgproc.getRotation(img));
+
     
   }
 
@@ -92,8 +102,10 @@ class ImageProcessing extends PApplet {
   PVector getRotation(PImage currImg) {
     sob = sobel(filterThres(blur(currImg)));
     corners = hough(sob, 6);
+   
     if (corners.size() == 4) {
       PVector rtV = rtC.get3DRotations(corners);
+ 
       
       rx1 = .2*rx1 + .2*rx2 + .3*rx3 + .4*(float)rtV.x;
       ry1 = .2*ry1 + .2*ry2 + .3*ry3 + .4*(float)rtV.y;
@@ -115,11 +127,11 @@ class ImageProcessing extends PApplet {
       ry2 = .7*ry2 + .2*ry3 + .1*0;
       rz2 = .7*rz2 + .2*rz3 + .1*0;
 
-      rx3 = (float) 0.0;
-      ry3= (float) 0.0;
-      rz3 = (float) 0.0;
+      rx3 = (float) rx3*0.9;
+      ry3= (float) ry3*0.9;
+      rz3 = (float) rz3*0.9;
     }
-
+    
 
     return new PVector(rx1, ry1, rz1);
   }
@@ -207,6 +219,8 @@ class ImageProcessing extends PApplet {
         }
       }
     }
+    
+ //   image(result,0,0);
     return result;
   }
 
@@ -217,10 +231,23 @@ class ImageProcessing extends PApplet {
     for (int x=0; x<img.width; x++) {
       for (int y=0; y<img.height; y++) {
         if (verifiesProperties(img.pixels[y*img.width + x])) {
+           
           result.pixels[y*img.width + x] = color(255);
-        } else {
-          result.pixels[y*img.width +x] = color(0);
-        }
+          if (y!=0 )         result.pixels[(y-1)*img.width+x] = color(255);
+          if (y!=img.height-1) result.pixels[(y+1)*img.width+x] = color (255);
+          
+          if (x!=0){                   
+            result.pixels[y*img.width + x-1] = color(255);
+            if (y!=0 )         result.pixels[(y-1)*img.width+x-1] = color(255);
+            if (y!=img.height-1) result.pixels[(y+1)*img.width+x-1] = color (255);
+          }
+          
+          if (x!=img.width-1){
+            result.pixels[y*img.width+x+1] = color(255);
+            if (y!=0 )         result.pixels[(y-1)*img.width+x+1] = color(255);
+            if (y!=img.height-1) result.pixels[(y+1)*img.width+x+1] = color (255);
+          }
+        } 
       }
     }
     return result;

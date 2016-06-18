@@ -78,13 +78,13 @@ class QuadGraph {
         findNewCycles(new int[] {graph[i][j]});
       }
     }
-    for (int[] cy : cycles) {
+ /*   for (int[] cy : cycles) {
       String s = "" + cy[0];
       for (int i = 1; i < cy.length; i++) {
         s += "," + cy[i];
       }
       System.out.println(s);
-    }
+    } */
     return cycles;
   }
 
@@ -248,7 +248,7 @@ class QuadGraph {
       || (i1<0 && i2<0 && i3<0 && i4<0))
       return true;
     else 
-    System.out.println("Eliminating non-convex quad");
+    //System.out.println("Eliminating non-convex quad");
     return false;
   }
 
@@ -283,7 +283,7 @@ class QuadGraph {
   boolean nonFlatQuad(PVector c1, PVector c2, PVector c3, PVector c4) {
     
     // cos(70deg) ~= 0.3
-    float min_cos = 0.5f;
+    float min_cos = 0.9f;
 
     PVector v21= PVector.sub(c1, c2);
     PVector v32= PVector.sub(c2, c3);
@@ -298,7 +298,7 @@ class QuadGraph {
     if (cos1 < min_cos && cos2 < min_cos && cos3 < min_cos && cos4 < min_cos)
       return true;
     else {
-      System.out.println("Flat quad");
+      //System.out.println("Flat quad");
       return false;
     }
   }

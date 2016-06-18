@@ -32,9 +32,9 @@ void displayBoard() {
 
   pushMatrix();
   moveToCenterOfBoardPlane();
-  fill(boxColor);
+  fill(boxColor,127);
   stroke(strokeColor);
-  box(boxWidth, boxHeight, boxDepth);
+  //box(boxWidth, boxHeight, boxDepth);
   drawAdditions();
   popMatrix();
 } 
@@ -48,7 +48,7 @@ void drawAdditions() {
 //this method is called in drawAdditions() and draws walls around the board
 void drawWalls() {
   pushMatrix();
-  fill(wallsColor);
+  fill(wallsColor,127);
 
   translate(boxWidth/2 + 10, -10, 0);
   box(20, 30, boxDepth);
