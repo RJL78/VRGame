@@ -21,12 +21,11 @@ boolean zoomMinusClicked = false;
 
 float minVelocityForScore = 2;
 ImageProcessing imgproc;
-PVector rot;
 //PImage imgTest;
-Movie vid;
 
 
-PImage img = new PImage();
+
+
 
 PGraphics videoFrame; 
 int videoFrameHeight = screenHeight/5; 
@@ -44,20 +43,18 @@ void settings() {
 
 void setup() {
   
- vid = new Movie(this, "F:\\Programmation\\VRGame\\Game\\data\\testvideo.mp4"); 
-  vid.loop();
-
-
-videoFrame =  createGraphics(videoFrameWidth,videoFrameHeight,JAVA2D);
-//  camera(screenWidth/2, 0.75*screenHeight/2, cameraDist, screenWidth/2, screenHeight/2, 0, 0, 1, 0);
+  vid = new Movie(this, "testvideo.mp4"); 
+  img = createImage(INPUT_WIDTH,INPUT_HEIGHT,RGB);
+  println(img.height);
+  
+  videoFrame =  createGraphics(videoFrameWidth,videoFrameHeight,JAVA2D);
+  
+  
   directionalLight(50, 100, 125, 0, -1, 0);
   ambientLight(102, 102, 102);
   setupScoreBoard();
-  //imgTest = loadImage("board.jpg");
-  //img = loadImage("F:\\Programmation\\VRGame\\Game\\data\\board3.jpg");
+
   
-  img = createImage(INPUT_WIDTH,INPUT_HEIGHT,RGB);
-  rtC = new TwoDThreeD(INPUT_WIDTH, INPUT_HEIGHT);
  
   imgproc = new ImageProcessing();
   String []args = {"Image processing window"};
@@ -67,40 +64,23 @@ videoFrame =  createGraphics(videoFrameWidth,videoFrameHeight,JAVA2D);
   
   
 }
-void movieEvent(Movie m) {
-  m.read();
-}
 
 void draw() {
   perspective();
   background(backgroundColor);
   stroke(0, 0, 255);
-  img = vid;
-    img.loadPixels();
-  rot = imgproc.getRotation(img);
+
   if (run) {  
-    mover.update(rot); 
+
     mover.checkCollisions();
     displayBoard();
     displayBall();
     displayCylinders();
-    //delay(pauseTime);
-    
-    
+   
   } else {
     displaySelector();
   }
   drawScoreBoard();
-  videoFrame.beginDraw(); 
-  PImage imgCopy = img.copy();
-  imgCopy.resize(videoFrameWidth,videoFrameHeight);
-  videoFrame.background(255);
-  videoFrame.image(imgCopy,0,0);
-  videoFrame.endDraw();
-  
-  
-  
-  image(videoFrame, screenWidth-videoFrameWidth, 0, videoFrameWidth, videoFrameHeight);
   
 }
 

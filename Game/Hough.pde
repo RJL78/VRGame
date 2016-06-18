@@ -167,25 +167,29 @@ List<PVector> hough(PImage edgeImg, int nLines) {
     
     if (goodQuad(quadGraph, c12, c23, c34, c41)) {
       
-      bestQuadFound = true;
-      bestQuadFrame.stroke(204, 102, 0);
-      bestQuadFrame.fill(255, 128, 0);
+  
       c12.mult(2);
       c23.mult(2);
       c34.mult(2);
       c41.mult(2); 
-      /*
+     /* 
+        PVector a =  new PVector ( c12.x * videoFrameWidth / INPUT_WIDTH, c12.y * videoFrameHeight/ INPUT_HEIGHT)  ; 
+        PVector b =  new PVector ( c23.x * videoFrameWidth / INPUT_WIDTH, c23.y * videoFrameHeight/ INPUT_HEIGHT)  ;  
+        PVector c =  new PVector ( c34.x * videoFrameWidth / INPUT_WIDTH, c34.y * videoFrameHeight/ INPUT_HEIGHT)  ;
+        PVector d =  new PVector ( c41.x * videoFrameWidth / INPUT_WIDTH, c41.y * videoFrameHeight/ INPUT_HEIGHT)  ; 
+
       
-      bestQuadFrame.line(c12.x,c12.y,c23.x,c23.y); 
-      bestQuadFrame.line(c23.x,c23.y,c34.x,c34.y); 
-      bestQuadFrame.line(c34.x,c34.y,c41.x,c41.y); 
-      bestQuadFrame.line(c41.x,c41.y,c12.x,c12.y); 
+      
+      bestQuadFrame.line(a.x,a.y,b.x,b.y); 
+      bestQuadFrame.line(b.x,b.y,c.x,c.y); 
+      bestQuadFrame.line(c.x,c.y,d.x,d.y); 
+      bestQuadFrame.line(d.x,d.y,a.x,a.y); 
       
       bestQuadFrame.ellipse(c12.x, c12.y, 10, 10);
       bestQuadFrame.ellipse(c23.x, c23.y, 10, 10);
       bestQuadFrame.ellipse(c34.x, c34.y, 10, 10);
-      bestQuadFrame.ellipse(c41.x, c41.y, 10, 10);
-      */
+      bestQuadFrame.ellipse(c41.x, c41.y, 10, 10);*/
+      
       
       br = new PVector(c12.x, c12.y);
       tr = new PVector(c23.x, c23.y);
