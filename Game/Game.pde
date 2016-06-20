@@ -1,4 +1,3 @@
-import processing.sound.*;
 
 /** ---- PHYSICAL CONSTANTS ---- **/
 static float normalForce = 1;
@@ -23,8 +22,6 @@ float minVelocityForScore = 2;
 ImageProcessing imgproc;
 PShape minion;
 PImage back;
-SoundFile banana;
-SoundFile giggles;
 //PImage imgTest;
 
 
@@ -49,8 +46,8 @@ void setup() {
   
   minion = loadShape("minion1.obj");
   minion.scale(25);  
-  banana = new SoundFile(this, "banana.mp3");
-  giggles = new SoundFile(this, "giggles.mp3");
+  sound_banana = new SoundFile(this, "banana.mp3");
+  sound_giggles = new SoundFile(this, "giggles_cut.mp3");
   vid = new Movie(this, "testvideo.mp4"); 
   img = createImage(INPUT_WIDTH,INPUT_HEIGHT,RGB);
   back = loadImage("background.jpg");
@@ -81,6 +78,7 @@ void draw() {
   if (run) {  
 
     mover.checkCollisions();
+    decrementSound();
     displayBoard();
     displayBall();
     displayCylinders();
