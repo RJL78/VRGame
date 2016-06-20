@@ -83,13 +83,11 @@ class ImageProcessing extends PApplet {
   }
 
   void draw() {
-    if (run) {
-      vid.read();
-      img = vid;
-      img.loadPixels();
-      background(img);
-      mover.newTarget(imgproc.getRotation(img));
-    }
+    vid.read();
+    img = vid;
+    img.loadPixels();
+    background(img);
+    mover.newTarget(imgproc.getRotation(img));
   }
 
 
