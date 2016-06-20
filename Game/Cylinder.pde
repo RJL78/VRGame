@@ -67,11 +67,13 @@ void displayCylinders() {
   moveToCenterOfBoardPlane();
   for (int i=0; i<cylinders.size(); i++) {
     pushMatrix(); 
-    translate(cylinderPositions.get(i).x, -boxHeight/2, cylinderPositions.get(i).y); 
-    rotateX(PI/2);
-    fill(cylinderColor);
+    translate(cylinderPositions.get(i).x, -boxHeight/2 - 20, cylinderPositions.get(i).y); 
+    rotateX(PI);
+    rotateY(PI);
+    shape(minion);
+    //fill(cylinderColor);
     noStroke();
-    shape(cylinders.get(i)); 
+    //shape(cylinders.get(i)); 
     popMatrix();
   }
   popMatrix();
@@ -95,8 +97,11 @@ void displaySelector() {
   PShape cursorCylinder = makeCylinder();
   translate(mouseX, mouseY, boxHeight/2);
   if(!mouseOverScoreBoard()){
-    shape(cursorCylinder);
-  }
+    //shape(cursorCylinder);
+    rotateX(2*PI/3.0);
+    rotateY(PI);
+    shape(minion);  
+}
   popMatrix();
 
   pushMatrix();
@@ -116,7 +121,11 @@ void displaySelector() {
   for (int i=0; i<cylinders.size(); i++) {
     pushMatrix(); 
     translate(cylinderPositions.get(i).x, cylinderPositions.get(i).y, boxHeight/2); 
-    shape(cylinders.get(i)); 
+    rotateX(PI/2.0);
+    rotateY(PI);
+    //rotateZ(PI/3);
+    //shape(cylinders.get(i)); 
+    shape(minion);
     popMatrix();
   }
 

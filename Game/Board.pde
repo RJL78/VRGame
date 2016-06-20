@@ -7,10 +7,16 @@ int boxWidth = screenWidth/2;
 int boxHeight = 10;
 int boxDepth = boxWidth;
 
+int wallHeight = 30;
+
 //The colors are represented with the class jawa.awt.Color for easier manipulation
-int boxColor = new Color(155, 255, 150).getRGB();
-int strokeColor = new Color(205, 50, 10).getRGB();
-int wallsColor = new Color(255, 153, 0).getRGB();
+//int boxColor = new Color(155, 255, 150).getRGB();
+int boxColor = new Color(245, 220, 80).getRGB();
+//int strokeColor = new Color(205, 50, 10).getRGB();
+//int strokeColor = new Color(40, 130, 115).getRGB();
+int strokeColor = new Color(139,69,19).getRGB();
+//int wallsColor = new Color(255, 153, 0).getRGB();
+int wallsColor = new Color(22, 99, 222).getRGB();
 int backgroundColor = new Color(0, 155, 255).getRGB();
 int ballColor = new Color(strokeColor).getRGB();
 
@@ -34,7 +40,7 @@ void displayBoard() {
   moveToCenterOfBoardPlane();
   fill(boxColor,127);
   stroke(strokeColor);
-  //box(boxWidth, boxHeight, boxDepth);
+  box(boxWidth, boxHeight, boxDepth);
   drawAdditions();
   popMatrix();
 } 
@@ -50,25 +56,25 @@ void drawWalls() {
   pushMatrix();
   fill(wallsColor,127);
 
-  translate(boxWidth/2 + 10, -10, 0);
-  box(20, 30, boxDepth);
+  translate(boxWidth/2 + 10 , -10, 0);
+  box(20, wallHeight, boxDepth);
   translate(0, 0, boxDepth/2 + 10);
-  box(20, 30, 20);
+  box(20, wallHeight, 20);
 
   translate(-boxWidth/2 - 10, 0, 0);
-  box(boxWidth, 30, 20);
+  box(boxWidth, wallHeight, 20);
   translate(-boxWidth/2 - 10, 0, 0);
-  box(20, 30, 20);
+  box(20, wallHeight, 20);
 
   translate(0, 0, -boxDepth/2 - 10);
-  box(20, 30, boxDepth);
+  box(20, wallHeight, boxDepth);
   translate(0, 0, -boxDepth/2 - 10);
-  box(20, 30, 20);
+  box(20, wallHeight, 20);
 
   translate(boxWidth/2 + 10, 0, 0);
-  box(boxWidth, 30, 20);
+  box(boxWidth, wallHeight, 20);
   translate(boxWidth/2 + 10, 0, 0);
-  box(20, 30, 20);
+  box(20, wallHeight, 20);
 
   popMatrix();
 }

@@ -61,7 +61,7 @@ class ImageProcessing extends PApplet {
     
     
  MAX_QUAD_AREA = 45000;
- MIN_QUAD_AREA = 10364;
+ MIN_QUAD_AREA = 17500; //10364
  HUE_MIN = 60; 
  HUE_MAX = 130; 
  BRIGHTNESS_MIN = 50;

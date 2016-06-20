@@ -58,6 +58,7 @@ class Mover {
 
     }
     if (collision && sphereVelocity.mag()> minVelocityForScore){
+      banana.play();
       lastScore = -sphereVelocity.mag();
       totalScore += lastScore;
       updateMaxMinScore();
@@ -72,6 +73,7 @@ class Mover {
     for (int i=0; i<cylinders.size(); i++) {
       float distance = cylinderPositions.get(i).dist(spherePositionFromCenter);
       if (distance <= sphereSize + cylinderBaseSize) {
+        giggles.play();
         PVector normalVector = PVector.sub(spherePositionFromCenter, cylinderPositions.get(i)).normalize();
         spherePositionFromCenter = PVector.add(cylinderPositions.get(i), PVector.mult(normalVector, cylinderBaseSize+sphereSize));
         sphereVelocity = PVector.sub(sphereVelocity, PVector.mult(normalVector, 2*normalVector.dot(sphereVelocity)));
