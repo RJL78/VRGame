@@ -63,14 +63,14 @@ PShape makeCylinder() {
 // displayCylinders paints the cylinders at their respective positions on the board ( as defined by the vectors of cylinderPositions )
 
 void displayCylinders() {
-  pushMatrix(); 
+  pushMatrix();
   moveToCenterOfBoardPlane();
   for (int i=0; i<cylinders.size(); i++) {
     pushMatrix(); 
     translate(cylinderPositions.get(i).x, -boxHeight/2, cylinderPositions.get(i).y); 
     rotateX(PI/2);
     fill(cylinderColor);
-    noStroke();
+    stroke(0,0,0);
     shape(cylinders.get(i)); 
     popMatrix();
   }

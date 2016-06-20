@@ -78,13 +78,6 @@ class QuadGraph {
         findNewCycles(new int[] {graph[i][j]});
       }
     }
- /*   for (int[] cy : cycles) {
-      String s = "" + cy[0];
-      for (int i = 1; i < cy.length; i++) {
-        s += "," + cy[i];
-      }
-      System.out.println(s);
-    } */
     return cycles;
   }
 
@@ -244,12 +237,7 @@ class QuadGraph {
     float i3=v43.cross(v14).z;
     float i4=v14.cross(v21).z;
 
-    if (   (i1>0 && i2>0 && i3>0 && i4>0) 
-      || (i1<0 && i2<0 && i3<0 && i4<0))
-      return true;
-    else 
-    //System.out.println("Eliminating non-convex quad");
-    return false;
+    return ((i1>0 && i2>0 && i3>0 && i4>0)  || (i1<0 && i2<0 && i3<0 && i4<0));
   }
 
   /** Compute the area of a quad, and check it lays within a specific range
@@ -268,13 +256,9 @@ class QuadGraph {
 
     float area = Math.abs(0.5f * (i1 + i2 + i3 + i4));
 
-    //System.out.println("Area = "+area);
 
-    boolean valid = (area < max_area && area > min_area);
+    return(area < max_area && area > min_area);
 
-    if (!valid) System.out.println("Area out of range");
-
-    return valid;
   }
 
   /** Compute the (cosine) of the four angles of the quad, and check they are all large enough
@@ -298,7 +282,6 @@ class QuadGraph {
     if (cos1 < min_cos && cos2 < min_cos && cos3 < min_cos && cos4 < min_cos)
       return true;
     else {
-      //System.out.println("Flat quad");
       return false;
     }
   }

@@ -18,23 +18,6 @@ class HoughComparator implements java.util.Comparator<Integer> {
   }
 }
 
-ArrayList<PVector> getIntersections( List<PVector> lines) {
-  ArrayList<PVector> intersections = new ArrayList<PVector>();
-  for (int i = 0; i < lines.size() - 1; i++) {
-    PVector line1 = lines.get(i);
-    for (int j = i + 1; j < lines.size(); j++) {
-      PVector line2 = lines.get(j);
-      // compute the intersection and add it to ’intersections’
-      PVector intersectionPoint = intersection(line1, line2);
-      intersections.add(intersectionPoint);
-      // draw the intersection;
-      fill(255, 128, 0);
-      //ellipse(intersectionPoint.x, intersectionPoint.y, 10, 10);
-    }
-  }
-  return intersections;
-}
-
 PVector intersection(PVector v1, PVector v2) {
   double d = cos(v2.y) * sin(v1.y) - cos(v1.y) * sin(v2.y);
   float x = (float) (( v2.x*sin(v1.y) - v1.x*sin(v2.y))/d)/2;
@@ -45,7 +28,7 @@ PVector intersection(PVector v1, PVector v2) {
 
 List<PVector> hough(PImage edgeImg, int nLines) {
 
-  PVector tl, bl, br, tr; 
+
   List<PVector> corners = new ArrayList();
 
   float discretizationStepsPhi = 0.07f;
@@ -131,34 +114,6 @@ List<PVector> hough(PImage edgeImg, int nLines) {
     float r = (accR - (rDim - 1) * 0.5f) * discretizationStepsR;
     float phi = accPhi * discretizationStepsPhi;
     bestLines.add(new PVector(r, phi));
-
-    int x0 = 0;
-    int y0 = (int) (r/tabSin[accPhi]);
-    int x1 = (int) (r/tabCos[accPhi]);
-    int y1 = 0;
-    int x2 = edgeImg.width;
-    int y2 = (int) ( -tabCos[accPhi] / tabSin[accPhi] * x2 + r/ tabSin[accPhi]);
-    int y3 = edgeImg.width;
-    int x3 = (int) ( -(y3 - r / tabSin[accPhi]) * (tabSin[accPhi] / tabCos[accPhi]));
-
-    // Finally, plot the lines
-  /*  stroke(204, 102, 0);
-    if (y0 > 0) {
-      if (x1 > 0)
-        imgproc.line(x0, y0, x1, y1);
-      else if (y2 > 0)
-        imgproc.line(x0, y0, x2, y2);
-      else
-        imgproc.line(x0, y0, x3, y3);
-    } else {
-      if (x1 > 0) {
-        if (y2 > 0)
-          imgproc.line(x1, y1, x2, y2);
-        else
-          imgproc.line(x1, y1, x3, y3);
-      } else
-        imgproc.line(x2, y2, x3, y3);
-    } */ 
   }
 
   QuadGraph quadGraph = new QuadGraph();
@@ -170,32 +125,32 @@ List<PVector> hough(PImage edgeImg, int nLines) {
   PVector bestc23= new PVector();
   PVector bestc34= new PVector();
   PVector bestc41= new PVector();
-  for (int i = 0; i<quads.size();i++) {
+  for (int i = 0; i<quads.size(); i++) {
     PVector l1 = bestLines.get(quads.get(i)[0]);
     PVector l2 = bestLines.get(quads.get(i)[1]);
     PVector l3 = bestLines.get(quads.get(i)[2]);
     PVector l4 = bestLines.get(quads.get(i)[3]);
-   
+
     PVector c12 = intersection(l1, l2);
     PVector c23 = intersection(l2, l3);
     PVector c34 = intersection(l3, l4);
     PVector c41 = intersection(l4, l1);
-    
+
     if (goodQuad(quadGraph, c12, c23, c34, c41)) {
-      
-        c12.mult(2);
-        c23.mult(2);
-        c34.mult(2);
-        c41.mult(2);
-        
-        goodQuadFound = true;
-      
-      
+
+      c12.mult(2);
+      c23.mult(2);
+      c34.mult(2);
+      c41.mult(2);
+
+      goodQuadFound = true;
+
+
       double parallelError = 0.0;
       float diff = abs(bestLines.get(quads.get(i)[0]).y - bestLines.get(quads.get(i)[2]).y);
-      parallelError += min(diff,abs(diff-PI));
+      parallelError += min(diff, abs(diff-PI));
       diff = abs(bestLines.get(quads.get(i)[1]).y - bestLines.get(quads.get(i)[3]).y);
-      parallelError += min(diff,abs(diff-PI));
+      parallelError += min(diff, abs(diff-PI));
       if (bestError>parallelError) {
         bestc12=c12;
         bestc23=c23;
@@ -205,21 +160,21 @@ List<PVector> hough(PImage edgeImg, int nLines) {
       }
     }
   }
-      Random random = new Random();
-      imgproc.stroke(0, 0, 255);
-      imgproc.fill(color(min(255, random.nextInt(300)), 
-        min(255, random.nextInt(300)), 
-        min(255, random.nextInt(300)), 50));
-       imgproc.quad(bestc12.x, bestc12.y, bestc23.x, bestc23.y, bestc34.x, bestc34.y, bestc41.x, bestc41.y);
+  Random random = new Random();
+  imgproc.stroke(0, 0, 255);
+  imgproc.fill(color(min(255, random.nextInt(300)), 
+    min(255, random.nextInt(300)), 
+    min(255, random.nextInt(300)), 50));
+  imgproc.quad(bestc12.x, bestc12.y, bestc23.x, bestc23.y, bestc34.x, bestc34.y, bestc41.x, bestc41.y);
 
-if (goodQuadFound){
-  corners.add(bestc12);
-  corners.add(bestc23);
-  corners.add(bestc34);
-  corners.add(bestc41);
-}
+  if (goodQuadFound) {
+    corners.add(bestc12);
+    corners.add(bestc23);
+    corners.add(bestc34);
+    corners.add(bestc41);
+  }
 
-  
+
   return corners;
 }
 

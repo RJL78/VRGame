@@ -1,11 +1,15 @@
 
 PVector gravityForce = new PVector(0, 0);
 float frictionMagnitude = normalForce * mu;
+float targetZincline; 
+float targetXincline;
 
 
 class Mover {
 
   Mover() {
+    targetZincline = 0f; 
+    targetXincline = 0f; 
   }
   
   float clampAngle(float angle){
@@ -14,11 +18,16 @@ class Mover {
     return angle;
   }
   // update() modifies the physical forces at work according to the inclination of the board and the speed of the ball
-  void update(PVector rotation) {
+  
+  void newTarget(PVector rotation) {
+    targetZincline = rotation.y; 
+    targetXincline = rotation.x; 
+  }
+  
+  void update() {
     
-    
-    currZIncline = clampAngle(rotation.y);
-    currXIncline = clampAngle(-rotation.x);
+    currZIncline = clampAngle((currZIncline + targetZincline)/2);
+    currXIncline = clampAngle((currXIncline + targetXincline)/2);
     gravityForce.x =  sin(currZIncline) * gravityConstant; 
     gravityForce.y = - sin(currXIncline) * gravityConstant;
     PVector friction = sphereVelocity.get();

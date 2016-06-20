@@ -34,7 +34,7 @@ void displayBoard() {
   moveToCenterOfBoardPlane();
   fill(boxColor,127);
   stroke(strokeColor);
-  //box(boxWidth, boxHeight, boxDepth);
+  box(boxWidth, boxHeight, boxDepth);
   drawAdditions();
   popMatrix();
 } 
@@ -103,4 +103,5 @@ void drawShiftWalls() {
   noStroke();
   strokeWeight(1);
   popMatrix();
+  
 }
