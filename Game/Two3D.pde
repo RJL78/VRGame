@@ -126,7 +126,6 @@ return quad;
         PVector x = points2D.get(i);
         float[] xH = {x.x, x.y, 1};
         projectedCorners[i] = Mat.multiply(invK, xH);
-        //println(printV(projectedCorners[i]));
     }
     
     // 'A' contains the cross-product (K^(-1) · p) X P

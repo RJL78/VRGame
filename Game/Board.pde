@@ -8,11 +8,11 @@ int boxHeight = 10;
 int boxDepth = boxWidth;
 
 //The colors are represented with the class jawa.awt.Color for easier manipulation
-int boxColor = new Color(155, 255, 150).getRGB();
-int strokeColor = new Color(205, 50, 10).getRGB();
-int wallsColor = new Color(255, 153, 0).getRGB();
-int backgroundColor = new Color(0, 155, 255).getRGB();
-int ballColor = new Color(strokeColor).getRGB();
+int boxColor = new Color(150, 150, 150).getRGB();
+int strokeColor = new Color(0, 0, 0).getRGB();
+int wallsColor = new Color(255, 255, 255).getRGB();
+int backgroundColor = new Color(90,90,90).getRGB();
+int ballColor = new Color(255,255,0).getRGB();
 
 //These variables are used for the implementation of the board's rotation
 float currXIncline = 0;
@@ -32,7 +32,7 @@ void displayBoard() {
 
   pushMatrix();
   moveToCenterOfBoardPlane();
-  fill(boxColor,127);
+  fill(boxColor,255);
   stroke(strokeColor);
   box(boxWidth, boxHeight, boxDepth);
   drawAdditions();
@@ -48,27 +48,27 @@ void drawAdditions() {
 //this method is called in drawAdditions() and draws walls around the board
 void drawWalls() {
   pushMatrix();
-  fill(wallsColor,127);
+  fill(wallsColor,255);
 
-  translate(boxWidth/2 + 10, -10, 0);
-  box(20, 30, boxDepth);
-  translate(0, 0, boxDepth/2 + 10);
-  box(20, 30, 20);
+  translate(boxWidth/2 + 5, -5, 0);
+  box(10, 30, boxDepth);
+  translate(0, 0, boxDepth/2 + 5);
+  box(10, 30, 10);
 
-  translate(-boxWidth/2 - 10, 0, 0);
-  box(boxWidth, 30, 20);
-  translate(-boxWidth/2 - 10, 0, 0);
-  box(20, 30, 20);
+  translate(-boxWidth/2 - 5, 0, 0);
+  box(boxWidth, 30, 10);
+  translate(-boxWidth/2 - 5, 0, 0);
+  box(10, 30, 10);
 
-  translate(0, 0, -boxDepth/2 - 10);
-  box(20, 30, boxDepth);
-  translate(0, 0, -boxDepth/2 - 10);
-  box(20, 30, 20);
+  translate(0, 0, -boxDepth/2 - 5);
+  box(10, 30, boxDepth);
+  translate(0, 0, -boxDepth/2 - 5);
+  box(10, 30, 10);
 
-  translate(boxWidth/2 + 10, 0, 0);
-  box(boxWidth, 30, 20);
-  translate(boxWidth/2 + 10, 0, 0);
-  box(20, 30, 20);
+  translate(boxWidth/2 + 5, 0, 0);
+  box(boxWidth, 30, 10);
+  translate(boxWidth/2 + 5, 0, 0);
+  box(10, 30, 10);
 
   popMatrix();
 }
@@ -78,8 +78,8 @@ void drawShiftWalls() {
 
   pushMatrix();
   fill(cylinderColor);
-  stroke(strokeColor);
-  strokeWeight(8);
+  //stroke(strokeColor);
+ // strokeWeight(2);
 
   translate(boxWidth/2 + 10, 0, 5);
   box(20, boxDepth, 10);

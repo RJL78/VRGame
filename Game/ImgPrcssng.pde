@@ -101,8 +101,6 @@ class ImageProcessing extends PApplet {
     if (corners.size() == 4 ) {
 
       rtV = rtC.get3DRotations(corners);
-      println( Math.abs (lastValidXMeasure - rtV.x) + " " +  Math.abs (lastValidZMeasure - rtV.z));
-
       if ( Math.abs (lastValidXMeasure - rtV.x) < maxRotMeasureDiff && Math.abs (lastValidZMeasure - rtV.z) < maxRotMeasureDiff) {
 
         rx1 = .2*rx1 + .2*rx2 + .3*rx3 + .4*(float)rtV.x;

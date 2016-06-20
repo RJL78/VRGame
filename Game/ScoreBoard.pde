@@ -18,7 +18,7 @@ int minScoreBarWidth = 1;
 int hudHeight = screenHeight/6;
 int hudBorder = 10;
 int aestheticCorrection = 50;
-int hudBackGroundColor = new Color(255, 255, 255).getRGB();
+int hudBackGroundColor = new Color(210, 210, 210).getRGB();
 
 int infoBoxWidth = screenWidth/8;
 int infoBoxHeight = hudHeight - 2*hudBorder;
@@ -30,7 +30,7 @@ int topViewSize = hudHeight - 2*hudBorder;
 
 int historyBoxHeight = hudHeight - 2*hudBorder;
 int histogramHeight = 2*historyBoxHeight/3;
-int histogramColor = new Color(0,255,0).getRGB();
+int histogramColor = new Color(255,255,0).getRGB();
 
 int zoomBoxHeight = histogramHeight;
 int zoomBoxWidth = screenWidth/8;
@@ -141,7 +141,7 @@ void drawScoreBoard() {
 
   int zeroLevel= (int)((maxScore)/(maxScore-minScore)*histogramHeight);
   if (minScore<maxScore) {
-    historyBox.stroke(255,0,0);
+    historyBox.stroke(0,0,0);
     historyBox.line(0,zeroLevel,historyBoxWidth,zeroLevel);
     historyBox.noStroke();
     historyBox.fill(histogramColor);
