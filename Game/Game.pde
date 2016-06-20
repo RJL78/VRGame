@@ -1,5 +1,4 @@
 
-
 /** ---- PHYSICAL CONSTANTS ---- **/
 static float normalForce = 1;
 static float mu = 0.01;
@@ -21,7 +20,8 @@ boolean zoomMinusClicked = false;
 
 float minVelocityForScore = 2;
 ImageProcessing imgproc;
-
+PShape minion;
+PImage back;
 
 
 
@@ -43,8 +43,14 @@ void settings() {
 
 void setup() {
   
-  vid = new Movie(this, INPUT_FILENAME); 
+  minion = loadShape("minion1.obj");
+  minion.scale(25);  
+  sound_banana = new SoundFile(this, "banana.mp3");
+  sound_giggles = new SoundFile(this, "giggles_cut.mp3");
+  vid = new Movie(this, INPUT_FILENAME);  
   img = createImage(INPUT_WIDTH,INPUT_HEIGHT,RGB);
+  back = loadImage("background.jpg");
+  back.resize(screenWidth, screenHeight);
   
   
   directionalLight(50, 100, 125, 0, -1, 0);
@@ -65,11 +71,13 @@ void setup() {
 void draw() {
   perspective();
   background(backgroundColor);
+  //background(back);
   stroke(0, 0, 255);
 
   if (run) {  
     mover.update();
     mover.checkCollisions();
+    decrementSound();
     displayBoard();
     displayBall();
     displayCylinders();

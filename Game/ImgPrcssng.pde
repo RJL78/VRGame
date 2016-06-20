@@ -57,7 +57,6 @@ class ImageProcessing extends PApplet {
 
   void setup() {
 
-
     MAX_QUAD_AREA = 45000;
     MIN_QUAD_AREA = 17000;
     HUE_MIN = 60; 
@@ -85,11 +84,11 @@ class ImageProcessing extends PApplet {
 
   void draw() {
     if (run) {
-    vid.read();
-    img = vid;
-    img.loadPixels();
-    background(img);
-    mover.newTarget(imgproc.getRotation(img));
+      vid.read();
+      img = vid;
+      img.loadPixels();
+      background(img);
+      mover.newTarget(imgproc.getRotation(img));
     }
   }
 
@@ -97,7 +96,7 @@ class ImageProcessing extends PApplet {
   PVector getRotation(PImage currImg) {
     sob = sobel(filterThres(blur(currImg)));
     corners = hough(sob, 6);
-    PVector rtV = new PVector(0,0,0);
+    PVector rtV = new PVector(0, 0, 0);
     if (corners.size() == 4 ) {
 
       rtV = rtC.get3DRotations(corners);
@@ -114,19 +113,15 @@ class ImageProcessing extends PApplet {
         rx3 = .2*rx3 + .8 * (float) rtV.x;
         ry3=  .2*ry3 + .8 * (float) rtV.y;
         rz3 = .2*rz3 + .8 * (float) rtV.z;
-
-       
       }
-      
+
       lastValidXMeasure = rtV.x;
-        lastValidZMeasure = rtV.z;
-      
-      
+      lastValidZMeasure = rtV.z;
     } 
-    
-    
-    if(corners.size() != 4 || Math.abs (lastValidXMeasure - rtV.x) >= maxRotMeasureDiff || Math.abs (lastValidZMeasure - rtV.z) >= maxRotMeasureDiff )
-     {
+
+
+    if (corners.size() != 4 || Math.abs (lastValidXMeasure - rtV.x) >= maxRotMeasureDiff || Math.abs (lastValidZMeasure - rtV.z) >= maxRotMeasureDiff )
+    {
       rx1 = .2*rx1 + .2*rx2 + .4*rx3 + .1*0;
       ry1 = .2*ry1 + .2*ry2 + .4*ry3 + .1*0;
       rz1 = .2*rz1 + .2*rz2 + .4*rz3 + .1*0;
@@ -134,7 +129,6 @@ class ImageProcessing extends PApplet {
       rx2 = .5*rx2 + .5*rx3;
       ry2 = .5*ry2 + .5*ry3;
       rz2 = .5*rz2 + .5*rz3;
-
     }
 
 
